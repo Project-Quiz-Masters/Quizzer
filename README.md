@@ -12,6 +12,7 @@ The goal of the project is to make learning more interactive and provide a pract
 - [Prashoon Jha](https://github.com/prashoonjha)  
 - [Emanuela](https://github.com/emalle)  
 - [Mohammad Hanif Arghushi](https://github.com/MohammadHanifArghushi)
+- [An Le](https://github.com/chopiean)
 
 ## Additional Information
 **Team name:** QuizMasters  
