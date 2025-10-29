@@ -18,9 +18,10 @@ The goal of the project is to make learning more interactive and provide a pract
 ## Additional Information
 
 **Team name:** QuizMasters  
-**Team Size:** 6-8
+**Team Size:** 6-8  
 **Communication platforms:** Microsoft Teams & WhatsApp  
 **Tech stack:** Backend – Java (Spring Boot), Frontend – HTML, CSS, React
 
 This is Hanif and I wrote this text to check my access to the repository
+
 Prashoon Jha added team size
