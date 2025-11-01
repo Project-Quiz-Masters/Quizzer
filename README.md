@@ -14,6 +14,7 @@ The goal of the project is to make learning more interactive and provide a pract
 - [Emanuela](https://github.com/emalle)
 - [Mohammad Hanif Arghushi](https://github.com/MohammadHanifArghushi)
 - [An Le](https://github.com/chopiean)
+- [Osman Lam](https://github.com/osmanlam)
 
 ## Additional Information
 
