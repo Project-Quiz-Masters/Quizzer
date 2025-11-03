@@ -25,3 +25,6 @@ The goal of the project is to make learning more interactive and provide a pract
 This is Hanif and I wrote this text to check my access to the repository
 
 Prashoon Jha added team size
+
+## Backlog
+The Github projects backlog can be accessed through [This link](https://github.com/orgs/Project-Quiz-Masters/projects/5/views/1)
