@@ -1,4 +1,6 @@
-package com.example.quizzer;
+package com.example.quizzer.answeroption;
+import com.example.quizzer.question.Question;
+
 import jakarta.persistence.*;
 
 @Entity

@@ -1,9 +1,11 @@
-package com.example.quizzer;
+package com.example.quizzer.question;
 
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import com.example.quizzer.quiz.Quiz;
+import com.example.quizzer.answeroption.AnswerOption;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
 
 @Entity
 public class Question {
