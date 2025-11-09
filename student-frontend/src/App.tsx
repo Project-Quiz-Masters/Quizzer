@@ -1,6 +1,7 @@
 import React from 'react';
 import TeacherDashboard from './components/TeacherDashboard'; // No extension needed
 import './App.css';
+import EditQuizModal from './components/EditQuizModal';
 
 function App() {
   return (

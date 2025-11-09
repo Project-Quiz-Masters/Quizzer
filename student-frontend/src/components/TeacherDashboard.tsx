@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
+import EditQuizModal from './EditQuizModal';
 
 interface Quiz {
   id: number;
   title: string;
   description: string;
   course: string;
+  published: boolean;
   teacherId: number;
 }
 
-interface TeacherDashboardProps {
-  teacherId: number;
-}
-
-const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ teacherId }) => {
+const TeacherDashboard: React.FC<{ teacherId: number }> = ({ teacherId }) => {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
-  const [message, setMessage] = useState<string>('');
+  const [message, setMessage] = useState('');
+  const [editingQuiz, setEditingQuiz] = useState<Quiz | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   useEffect(() => {
     fetchQuizzes();
@@ -70,7 +70,8 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ teacherId }) => {
           title: 'Test Quiz ' + Date.now(),
           description: 'This is a test quiz',
           teacherId: teacherId,
-          course: 'Test Course'
+          course: 'Test Course',
+          published: false
         })
       });
       if (response.ok) {
@@ -81,6 +82,18 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ teacherId }) => {
     } catch (error) {
       console.error('Error creating quiz:', error);
     }
+  };
+
+  // CORRECTED: Accepts the entire quiz object
+  const handleEditQuiz = (quiz: Quiz) => {
+    setEditingQuiz(quiz);
+    setIsEditModalOpen(true);
+  };
+
+  const handleUpdateQuiz = (updatedQuiz: Quiz) => {
+    setQuizzes(prev => prev.map(q => q.id === updatedQuiz.id ? updatedQuiz : q));
+    setMessage('Quiz updated successfully!');
+    setTimeout(() => setMessage(''), 3000);
   };
 
   return (
@@ -103,13 +116,14 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ teacherId }) => {
         ) : (
           quizzes.map(quiz => (
             <div key={quiz.id} className="quiz-card">
-              <h3>{quiz.title}</h3>
+              <h3>{quiz.title} {quiz.published && <span className="published-badge">Published</span>}</h3>
               <p>{quiz.description}</p>
               <p><strong>Course:</strong> {quiz.course}</p>
               <div className="quiz-actions">
+                {/* CORRECTED: Pass the entire quiz object */}
                 <button 
                   className="btn-edit"
-                  onClick={() => {/* Edit functionality */}}
+                  onClick={() => handleEditQuiz(quiz)}
                 >
                   Edit
                 </button>
@@ -124,6 +138,13 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ teacherId }) => {
           ))
         )}
       </div>
+
+      <EditQuizModal
+        quiz={editingQuiz}
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onUpdate={handleUpdateQuiz}
+      />
     </div>
   );
 };
