@@ -1,9 +1,10 @@
 package com.example.quizzer.quiz;
 
-import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.stereotype.Service;
 
 @Service
 public class QuizService {
@@ -40,7 +41,36 @@ public class QuizService {
         }).orElse(null);
     }
 
-    public void deleteQuiz(Long id) {
-        quizRepository.deleteById(id);
+    public List<Quiz> getQuizzesByTeacher(Long teacherId) {
+        return quizRepository.findByTeacherId(teacherId);
+    }
+
+  // (sp1-us-4 DELETE FUNCTIONALITY
+    public boolean deleteQuiz(Long quizId, Long teacherId) {
+        Optional<Quiz> optionalQuiz = quizRepository.findById(quizId);
+        
+        if (optionalQuiz.isPresent()) {
+            Quiz quiz = optionalQuiz.get();
+            
+            // Security check: only the teacher who created the quiz can delete it
+            if (!quiz.getTeacherId().equals(teacherId)) {
+                return false; // Unauthorized deletion attempt
+            }
+            
+            // (sp1-us-4)The cascade configuration in Quiz entity should handle question deletion
+            quizRepository.delete(quiz);
+            return true;
+        }
+        return false; // Quiz not found
+    }
+    
+    // (sp1-us-4) Overloaded method without teacher check (for admin purposes)
+    public boolean deleteQuiz(Long quizId) {
+        if (quizRepository.existsById(quizId)) {
+            quizRepository.deleteById(quizId);
+            return true;
+        }
+        return false;
     }
 }
+

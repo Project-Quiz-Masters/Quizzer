@@ -1,8 +1,16 @@
 package com.example.quizzer.quiz;
 
-import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
+import java.util.List;
+
+import com.example.quizzer.question.Question;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Quiz {
@@ -17,6 +25,11 @@ public class Quiz {
     private boolean published;
     private LocalDateTime createdAt;
     private String teacherId;
+    
+    // This cascade configuration ensures questions are deleted when quiz is deleted
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Question> questions;
+    
 
     public Quiz() {}
 
