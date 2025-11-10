@@ -10,6 +10,27 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * QuizController
+ * 
+ * RELATED TO ALL USER STORIES 1-6:
+ * - USER STORY 1: Create quiz
+ * - USER STORY 2: View list of quizzes  
+ * - USER STORY 3: Edit quiz
+ * - USER STORY 4: Delete quiz
+ * - USER STORY 5: Add questions to quiz
+ * - USER STORY 6: View questions in quiz
+ * 
+ * TASK #19: Add "View questions" link to quiz list
+ * 
+ * Handles HTTP requests for quiz management operations.
+ * Routes:
+ * - GET  /quizzes              -> Show list of all quizzes
+ * - GET  /quizzes/new          -> Show create quiz form
+ * - POST /quizzes              -> Create new quiz
+ * - GET  /quizzes/{id}         -> Show quiz details
+ * - POST /quizzes/{id}/delete  -> Delete quiz
+ */
 @Controller
 @RequestMapping("/quizzes")
 public class QuizController {
@@ -18,7 +39,10 @@ public class QuizController {
     private QuizRepository quizRepository;
     
     /**
-     * Display the form to create a new quiz
+     * USER STORY 1: Display the form to create a new quiz
+     * 
+     * Route: GET /quizzes/new
+     * Template: create-quiz.html
      */
     @GetMapping("/new")
     public String showCreateQuizForm() {
@@ -26,7 +50,13 @@ public class QuizController {
     }
     
     /**
-     * Handle the form submission to create a new quiz
+     * USER STORY 1: Handle form submission to create a new quiz
+     * 
+     * Route: POST /quizzes
+     * Accepts: title, description (optional)
+     * Redirect: /quizzes/{id}
+     * 
+     * Creates a new quiz and saves it to the database.
      */
     @PostMapping
     public String createQuiz(@RequestParam String title,
@@ -43,7 +73,14 @@ public class QuizController {
     }
     
     /**
-     * Display all quizzes
+     * USER STORY 2: Display list of all quizzes
+     * USER STORY 6, TASK #19: Add "View questions" link to quiz list
+     * 
+     * Route: GET /quizzes
+     * Template: quizzes-list.html
+     * 
+     * Shows all quizzes with their information and action buttons.
+     * Each quiz has a "Manage Questions" button linking to questions list.
      */
     @GetMapping
     public String listQuizzes(Model model) {
@@ -54,6 +91,9 @@ public class QuizController {
     
     /**
      * Display a specific quiz
+     * 
+     * Route: GET /quizzes/{id}
+     * Template: quiz-detail.html
      */
     @GetMapping("/{id}")
     public String viewQuiz(@PathVariable Long id, Model model) {
@@ -69,7 +109,12 @@ public class QuizController {
     }
     
     /**
-     * Delete a quiz
+     * USER STORY 4: Delete a quiz
+     * 
+     * Route: POST /quizzes/{id}/delete
+     * Redirect: /quizzes
+     * 
+     * Removes a quiz and all its associated questions from the system.
      */
     @PostMapping("/{id}/delete")
     public String deleteQuiz(@PathVariable Long id) {

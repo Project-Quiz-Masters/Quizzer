@@ -2,6 +2,15 @@ package com.example.quizzer.model;
 
 import jakarta.persistence.*;
 
+/**
+ * Question Entity
+ * 
+ * USER STORY 5: Add question to a quiz
+ * TASK #13: Implement Question entity and repository
+ * 
+ * Represents a question within a quiz. Each question has text content,
+ * a difficulty level (Easy, Normal, Hard), and belongs to a specific quiz.
+ */
 @Entity
 @Table(name = "questions")
 public class Question {

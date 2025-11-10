@@ -4,6 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Quizzes</title>
+    <!--
+        USER STORY 2: View list of added quizzes
+        TASK #19: Add "View questions" link to quiz list
+        
+        This page displays:
+        - All quizzes created by teachers
+        - Quiz title and description
+        - Number of questions in each quiz
+        - "Manage Questions" button (links to questions list)
+        - Delete button for each quiz
+        - "No Quizzes Yet" message if empty
+        - Link to create new quiz
+        
+        Data comes from: GET /quizzes
+        "Manage Questions" links to: GET /quizzes/{quizId}/questions
+    -->
     <style>
         * {
             margin: 0;
