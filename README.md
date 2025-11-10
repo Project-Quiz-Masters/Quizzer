@@ -29,3 +29,34 @@ Prashoon Jha added team size
 
 ## Backlog
 The Github projects backlog can be accessed through [This link](https://github.com/orgs/Project-Quiz-Masters/projects/5/views/1)
+
+## Developer Guide
+
+### Requirements
+- **Java version:** 21  
+- **Framework:** Spring Boot (Maven project)
+- **Database:** H2 (in-memory)
+- Make sure you have **Git**, **Java 21**, and **Maven** installed on your computer.
+
+### Getting Started
+To run the backend application from the command line:
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Project-Quiz-Masters/Quizzer.git
+2. Make sure you are on the right branch:
+    ```bash
+    git checkout main
+    git pull
+3. Check that the required dependencies are installed by Maven:
+    ```bash
+    mvn clean install
+4. The application should start at:
+    http://localhost:8080
+5. The project uses the H2 Database, which runs in-memory and does not require extra setup. You can access the database console from:
+    ```bash
+    http://localhost:8080/h2-console
+    
+    
+
+
