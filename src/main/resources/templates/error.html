@@ -87,12 +87,12 @@
         <h1>Oops! Something went wrong</h1>
         <p>We encountered an error while processing your request.</p>
         
-        <div class="error-message" th:if="${error}">
+        <div class="error-message" th:if="${error != null}">
             <strong>Error Details:</strong>
             <p th:text="${error}"></p>
         </div>
         
-        <div th:if="${!error}">
+        <div th:if="${error == null}">
             <p>Please try again or contact support if the problem persists.</p>
         </div>
         
