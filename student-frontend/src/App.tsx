@@ -1,13 +1,15 @@
 import React from 'react';
-import TeacherDashboard from './components/TeacherDashboard'; // No extension needed
 import './App.css';
-import EditQuizModal from './components/EditQuizModal';
 
 function App() {
   return (
+   
     <div className="App">
-      <TeacherDashboard teacherId={1} />
+      <header className="App-header">
+        <h1>Welcome to the Student Frontend</h1>
+      </header>
     </div>
+  
   );
 }
 

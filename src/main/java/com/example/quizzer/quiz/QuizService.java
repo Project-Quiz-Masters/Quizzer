@@ -31,15 +31,15 @@ public class QuizService {
     }
 
     public Quiz updateQuiz(Long id, Quiz updatedQuiz) {
-    return quizRepository.findById(id).map(existing -> {
-        existing.setTitle(updatedQuiz.getTitle());
-        existing.setDescription(updatedQuiz.getDescription());
-        existing.setCourse(updatedQuiz.getCourse());
-        existing.setPublished(updatedQuiz.isPublished());
-        existing.setTeacherId(updatedQuiz.getTeacherId());
-        return quizRepository.save(existing);
-    }).orElse(null);
-}
+        return quizRepository.findById(id).map(existing -> {
+            existing.setTitle(updatedQuiz.getTitle());
+            existing.setDescription(updatedQuiz.getDescription());
+            existing.setCourse(updatedQuiz.getCourse());
+            existing.setPublished(updatedQuiz.isPublished());
+            existing.setTeacherId(updatedQuiz.getTeacherId());
+            return quizRepository.save(existing);
+        }).orElse(null);
+    }
 
     public List<Quiz> getQuizzesByTeacher(Long teacherId) {
         return quizRepository.findByTeacherId(teacherId);
