@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz List</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+
+<body class="p-4">
+
+    <h1>Quizzes</h1>
+
+    <a href="/quizzes/new" class="btn btn-primary mb-3">Add New Quiz</a>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Course</th>
+                <th>Teacher ID</th>
+                <th>Published</th>
+                <th>Created At</th>
+                <th>Teacher ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="quiz : ${quizzes}">
+                <td th:text="${quiz.id}">1</td>
+                <td th:text="${quiz.title}">Sample Title</td>
+                <td th:text="${quiz.description}">Sample Description</td>
+                <td th:text="${quiz.course}">Sample Course</td>
+                <td th:text="${quiz.published}">false</td>
+                <td th:text="${quiz.createdAt}">2025-11-10T12:00</td>
+                <td th:text="${quiz.teacherId}">teacher1</td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+
+</html>
