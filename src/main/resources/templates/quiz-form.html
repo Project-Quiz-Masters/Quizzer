@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Add New Quiz</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+
+<body class="p-4">
+
+    <h1>Add New Quiz</h1>
+
+    <form th:action="@{/quizzes}" method="post">
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" class="form-control" id="title" name="title" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="course" class="form-label">Course</label>
+            <input type="text" class="form-control" id="course" name="course" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="teacherId" class="form-label">Teacher ID</label>
+            <input type="text" class="form-control" id="teacherId" name="teacherId" required>
+        </div>
+
+        <button type="submit" class="btn btn-success">Add Quiz</button>
+        <a href="/quizzes" class="btn btn-secondary">Back to List</a>
+    </form>
+
+</body>
+
+</html>
