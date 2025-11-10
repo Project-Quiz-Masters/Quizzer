@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Question to Quiz</title>
+    <!--
+        USER STORY 5: Add question to a quiz
+        TASK #12: Design "Add Question" form with text field and difficulty options
+        
+        This page displays a form where teachers can:
+        - Enter question text
+        - Select difficulty level (Easy, Normal, Hard)
+        - Submit to create a new question
+        
+        Form submits to: POST /quizzes/{quizId}/questions
+    -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        .header {
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .quiz-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .quiz-info strong {
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-family: inherit;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-group select {
+            cursor: pointer;
+            background-color: white;
+        }
+        
+        .difficulty-description {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+        
+        .difficulty-levels {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .difficulty-option {
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s;
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .difficulty-option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        
+        .difficulty-option.easy {
+            background: #e8f5e9;
+            border-color: #4caf50;
+            color: #2e7d32;
+        }
+        
+        .difficulty-option.normal {
+            background: #fff3e0;
+            border-color: #ff9800;
+            color: #e65100;
+        }
+        
+        .difficulty-option.hard {
+            background: #ffebee;
+            border-color: #f44336;
+            color: #c62828;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        button, a.btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+        
+        .error {
+            color: #d32f2f;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .success {
+            color: #388e3c;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Add Question to Quiz</h1>
+            <p>Create a new question for your quiz</p>
+        </div>
+        
+        <div class="quiz-info">
+            <strong>Quiz:</strong> <span th:text="${quiz.title}"></span>
+            <br>
+            <span th:if="${quiz.description}" style="color: #999; font-size: 13px; margin-top: 5px; display: block;">
+                <em th:text="${quiz.description}"></em>
+            </span>
+        </div>
+        
+        <form th:action="@{/quizzes/{id}/questions(id=${quiz.id})}" method="post">
+            <!-- Question Text -->
+            <div class="form-group">
+                <label for="text">Question Text *</label>
+                <textarea id="text" name="text" required placeholder="Enter your question here..."></textarea>
+                <div class="error" th:if="${error}">Please enter a valid question</div>
+            </div>
+            
+            <!-- Difficulty Level -->
+            <div class="form-group">
+                <label for="difficulty">Difficulty Level *</label>
+                <select id="difficulty" name="difficulty" required>
+                    <option value="">-- Select Difficulty --</option>
+                    <option th:each="diff : ${difficulties}" 
+                            th:value="${diff.name()}"
+                            th:text="${diff.displayName}">
+                    </option>
+                </select>
+                <div class="difficulty-description">
+                    Choose the difficulty level for this question
+                </div>
+            </div>
+            
+            <!-- Buttons -->
+            <div class="button-group">
+                <button type="submit" class="btn-primary">Add Question</button>
+                <a th:href="@{/quizzes/{id}/questions(id=${quiz.id})}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

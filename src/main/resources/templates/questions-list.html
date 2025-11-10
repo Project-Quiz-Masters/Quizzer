@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questions for Quiz</title>
+    <!--
+        USER STORY 6: View list of quiz's questions
+        TASK #16: Create page to list questions of a quiz
+        TASK #18: Add endpoint to list questions of a quiz
+        TASK #20: Show message when a quiz has no questions
+        TASK #21: Add navigation link back to quiz list
+        TASK #22: Add "View questions" link to quiz list
+        
+        This page displays:
+        - All questions for a specific quiz
+        - Question text and difficulty level
+        - Delete button for each question
+        - "No Questions Yet" message if empty
+        - Link to add new questions
+        - Navigation back to quiz list
+        
+        Data comes from: GET /quizzes/{quizId}/questions
+    -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+        }
+        
+        .btn-secondary:hover {
+            background: #f5f5f5;
+        }
+        
+        .content {
+            padding: 30px 40px;
+        }
+        
+        .quiz-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .quiz-info h3 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .quiz-info p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .quiz-info em {
+            color: #999;
+        }
+        
+        .questions-count {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .questions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .question-card {
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 20px;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+        }
+        
+        .question-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-color: #667eea;
+        }
+        
+        .question-content {
+            flex: 1;
+        }
+        
+        .question-text {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        .question-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 13px;
+        }
+        
+        .difficulty-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+        
+        .difficulty-badge.easy {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .difficulty-badge.normal {
+            background: #fff3e0;
+            color: #e65100;
+        }
+        
+        .difficulty-badge.hard {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .question-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-sm {
+            padding: 8px 12px;
+            font-size: 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-edit {
+            background: #2196f3;
+            color: white;
+        }
+        
+        .btn-edit:hover {
+            background: #1976d2;
+        }
+        
+        .btn-delete {
+            background: #f44336;
+            color: white;
+        }
+        
+        .btn-delete:hover {
+            background: #d32f2f;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+        
+        .empty-state h3 {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .empty-state p {
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .question-card {
+                flex-direction: column;
+            }
+            
+            .question-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div>
+                <h1>Questions for Quiz</h1>
+                <p th:text="${quiz.title}"></p>
+            </div>
+            <div class="header-actions">
+                <a href="#" class="btn btn-primary" th:href="@{/quizzes/{id}/questions/add(id=${quiz.id})}">
+                    + Add Question
+                </a>
+                <a href="#" class="btn btn-secondary" th:href="@{/quizzes}">
+                    Back to Quizzes
+                </a>
+            </div>
+        </div>
+        
+        <!-- Content -->
+        <div class="content">
+            <!-- Quiz Description -->
+            <div class="quiz-info" th:if="${quiz.description}">
+                <h3>Quiz Description</h3>
+                <p th:text="${quiz.description}"></p>
+            </div>
+            
+            <!-- Questions Count -->
+            <div class="questions-count" th:if="${questions.size() > 0}">
+                <span th:text="${questions.size()}"></span>
+                <span th:text="${questions.size() == 1 ? 'Question' : 'Questions'}"></span>
+            </div>
+            
+            <!-- Questions List -->
+            <div th:if="${questions.size() > 0}" class="questions-list">
+                <div class="question-card" th:each="question : ${questions}">
+                    <div class="question-content">
+                        <p class="question-text" th:text="${question.text}"></p>
+                        <div class="question-meta">
+                            <span class="difficulty-badge"
+                                  th:classappend="${'difficulty-' + question.difficulty.name().toLowerCase()}"
+                                  th:text="${question.difficulty.displayName}">
+                            </span>
+                        </div>
+                    </div>
+                    <div class="question-actions">
+                        <form th:action="@{/quizzes/{quizId}/questions/{questionId}/delete(quizId=${quiz.id}, questionId=${question.id})}" 
+                              method="post" 
+                              style="display: inline;">
+                            <button type="submit" class="btn-sm btn-delete" onclick="return confirm('Are you sure you want to delete this question?');">
+                                Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Empty State -->
+            <div th:if="${questions.size() == 0}" class="empty-state">
+                <h3>No Questions Yet</h3>
+                <p>Start by adding your first question to this quiz</p>
+                <a href="#" class="btn btn-primary" th:href="@{/quizzes/{id}/questions/add(id=${quiz.id})}">
+                    + Add First Question
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
