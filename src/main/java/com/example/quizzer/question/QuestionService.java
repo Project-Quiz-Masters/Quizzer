@@ -1,8 +1,9 @@
 package com.example.quizzer.question;
 
-import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.stereotype.Service;
 
 @Service
 public class QuestionService {
@@ -27,6 +28,11 @@ public class QuestionService {
 
     public void deleteQuestion(Long id) {
         questionRepository.deleteById(id);
+    }
+
+    public void createQuestion(String text, String difficulty, Long quizId) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'createQuestion'");
     }
 }
 

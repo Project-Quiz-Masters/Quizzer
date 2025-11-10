@@ -1,17 +1,21 @@
-package com.example.quizzer.controller;
 
-import com.example.quizzer.model.DifficultyLevel;
-import com.example.quizzer.model.Question;
-import com.example.quizzer.model.Quiz;
-import com.example.quizzer.repository.QuizRepository;
-import com.example.quizzer.service.QuestionService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+package com.example.quizzer.question;
 
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.example.quizzer.model.DifficultyLevel;
+import com.example.quizzer.quiz.Quiz;
+import com.example.quizzer.quiz.QuizRepository;
 
 /**
  * QuestionController
@@ -29,7 +33,7 @@ import java.util.Optional;
  * - POST /quizzes/{quizId}/questions/{id}/delete -> Delete question
  */
 @Controller
-@RequestMapping("/quizzes")
+@RequestMapping("/quizzes/{quizId}/questions")
 public class QuestionController {
     
     @Autowired
@@ -46,11 +50,12 @@ public class QuestionController {
      * 
      * Shows the form where teachers can enter question text and select difficulty.
      */
-    @GetMapping("/{quizId}/questions/add")
+    @GetMapping("/add")
     public String showAddQuestionForm(@PathVariable Long quizId, Model model) {
         Optional<Quiz> quiz = quizRepository.findById(quizId);
         
         if (quiz.isEmpty()) {
+            model.addAttribute("error", "Quiz not found");
             return "error";
         }
         
@@ -70,10 +75,10 @@ public class QuestionController {
      * Creates a new question and saves it to the database.
      * Then redirects to the questions list to confirm creation.
      */
-    @PostMapping("/{quizId}/questions")
+    @PostMapping
     public String addQuestion(@PathVariable Long quizId,
                              @RequestParam String text,
-                             @RequestParam(defaultValue = "NORMAL") String difficulty,
+                             @RequestParam(defaultValue = "MEDIUM") String difficulty,
                              Model model) {
         try {
             questionService.createQuestion(text, difficulty, quizId);
@@ -95,11 +100,12 @@ public class QuestionController {
      * Displays question text, difficulty level, and delete option.
      * Shows "No Questions Yet" message if quiz is empty.
      */
-    @GetMapping("/{quizId}/questions")
+    @GetMapping
     public String listQuestions(@PathVariable Long quizId, Model model) {
         Optional<Quiz> quiz = quizRepository.findById(quizId);
         
         if (quiz.isEmpty()) {
+            model.addAttribute("error", "Quiz not found");
             return "error";
         }
         
@@ -120,7 +126,7 @@ public class QuestionController {
      * Removes a question from a quiz.
      * Then redirects back to the questions list.
      */
-    @PostMapping("/{quizId}/questions/{questionId}/delete")
+    @PostMapping("/{questionId}/delete")
     public String deleteQuestion(@PathVariable Long quizId,
                                 @PathVariable Long questionId) {
         try {

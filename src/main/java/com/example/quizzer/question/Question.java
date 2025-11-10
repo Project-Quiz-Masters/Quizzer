@@ -1,11 +1,20 @@
 package com.example.quizzer.question;
 
-import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import com.example.quizzer.quiz.Quiz;
+
 import com.example.quizzer.answeroption.AnswerOption;
+import com.example.quizzer.quiz.Quiz;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Question {
@@ -40,4 +49,9 @@ public class Question {
 
     public List<AnswerOption> getAnswerOptions() { return answerOptions; }
     public void setAnswerOptions(List<AnswerOption> answerOptions) { this.answerOptions = answerOptions; }
+
+    @Override
+    public String toString() {
+        return "Question [id=" + id + ", text=" + text + ", difficulty=" + difficulty + "]";
+    }   
 }
