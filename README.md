@@ -61,20 +61,14 @@ To run the backend application from the command line:
 
 1. **Navigate to the frontend folder:**
    ```bash
-  cd student-dashboard
-2. Install dependencies:
+   cd student-dashboard
+2. **Install dependencies:**
+   ```bash
+   npm install
+3. **Start the development server:**
+   ```bash
+   npm run dev
+4. **Open the app in your browser**
 
-```bash
-Copy code
-npm install
-
-3. Start the development server:
-```bash
-Copy code
-npm run dev
-
-4. Open the app in your browser:
-👉 http://localhost:5173
-    
 
 
