@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
     <title>Add New Quiz</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
-
 <body class="p-4">
-
     <h1>Add New Quiz</h1>
 
     <form th:action="@{/quizzes}" method="post">
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
         <div class="mb-3">
             <label for="title" class="form-label">Title</label>
             <input type="text" class="form-control" id="title" name="title" required>
@@ -29,13 +27,13 @@
 
         <div class="mb-3">
             <label for="teacherId" class="form-label">Teacher ID</label>
-            <input type="text" class="form-control" id="teacherId" name="teacherId" required>
+            <!-- CHANGED: type="number" instead of type="text" -->
+            <input type="number" class="form-control" id="teacherId" name="teacherId" required>
         </div>
 
         <button type="submit" class="btn btn-success">Add Quiz</button>
-        <a href="/quizzes" class="btn btn-secondary">Back to List</a>
+        <a th:href="@{/quizzes}" class="btn btn-secondary">Back to List</a>
+
     </form>
-
 </body>
-
 </html>

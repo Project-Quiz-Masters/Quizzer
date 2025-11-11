@@ -1,6 +1,5 @@
-package com.example.quizzer.quiz; // Fixed package
+package com.example.quizzer.quiz;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,21 +16,17 @@ public class QuizService {
      * Create a new quiz (simple version)
      */
     public Quiz createQuiz(String title, String description) {
-        Quiz quiz = new Quiz(title, description, description, null);
+        // FIXED: Use proper parameters - title, description, course, teacherId
+        Quiz quiz = new Quiz(title, description, "Default Course", 1L); // Provide default values
         return quizRepository.save(quiz);
     }
     
     /**
      * Create a new quiz with all fields
      */
-    public Quiz addQuiz(String title, String description, String course, Long teacherId) { // Changed to Long
-        Quiz quiz = new Quiz();
-        quiz.setTitle(title);
-        quiz.setDescription(description);
-        quiz.setCourse(course);
-        quiz.setTeacherId(teacherId); // Now matches Long type
-        quiz.setPublished(false);
-        quiz.setCreatedAt(LocalDateTime.now());
+    public Quiz addQuiz(String title, String description, String course, Long teacherId) {
+        // FIXED: Use the constructor properly
+        Quiz quiz = new Quiz(title, description, course, teacherId);
         return quizRepository.save(quiz);
     }
 
@@ -51,22 +46,6 @@ public class QuizService {
      */
     public Optional<Quiz> getQuizById(Long id) {
         return quizRepository.findById(id);
-    }
-    
-    /**
-     * Update a quiz with basic fields
-     */
-    public Quiz updateQuiz(Long id, String title, String description) {
-        Optional<Quiz> existingQuiz = quizRepository.findById(id);
-        
-        if (existingQuiz.isEmpty()) {
-            throw new IllegalArgumentException("Quiz with ID " + id + " not found");
-        }
-        
-        Quiz quiz = existingQuiz.get();
-        quiz.setTitle(title);
-        quiz.setDescription(description);
-        return quizRepository.save(quiz);
     }
 
     /**
