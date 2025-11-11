@@ -56,6 +56,8 @@ To run the backend application from the command line:
 5. The project uses the H2 Database, which runs in-memory and does not require extra setup. You can access the database console from:
     ```bash
     http://localhost:8080/h2-console
+
+**### RAHTI PRODUCTION ENVIRONMENT URL**: https://rahti-quizzer-quizzer-postgres.2.rahtiapp.fi/quizzes
     
 
 
