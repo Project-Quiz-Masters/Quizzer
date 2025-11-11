@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${quiz.title}">Quiz Name</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+
+
+<body class="p-4">
+    <div class="container">
+        <h1 class="mb-4" th:text="'Add Question to ' + ${quiz.title}">Add Question</h1>
+
+        <form th:action="@{/questions}" th:object="${question}" method="post">
+
+            <input type="hidden" th:field="*{quiz.id}" th:value="${quiz.id}" />
+
+            <div class="mb-3">
+                <label for="text" class="form-label">Question Text</label>
+                <textarea class="form-control" id="text" th:field="*{text}" rows="3" required></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="difficulty" class="form-label">Difficulty</label>
+                <select class="form-select" id="difficulty" th:field="*{difficulty}" required>
+                    <option value="Easy">Easy</option>
+                    <option value="Normal" selected>Normal</option>
+                    <option value="Hard">Hard</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-success">Add Question</button>
+            <a th:href="@{/quizzes/{id}(id=${quiz.id})}" class="btn btn-secondary">Back to Quiz</a>
+        </form>
+    </div>
+</body>
+
+</html>
