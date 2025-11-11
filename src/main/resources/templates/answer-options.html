@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Options - ' + ${question.text}">Answer Options</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        .option-row { display:flex; align-items:center; gap:1rem; }
+        .option-text { flex:1; }
+        .correct-badge { margin-left: .5rem; }
+        .incorrect-badge { margin-left: .5rem; }
+    </style>
+</head>
+<body class="p-4">
+    <div th:insert="~{fragments/header :: siteHeader}"></div>
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>Answer options of "<span th:text="${question.text}">Question</span>"</h2>
+            <div>
+                <a th:href="@{/quizzes/{quizId}/questions(quizId=${quizId})}" class="btn btn-secondary">Back to Questions</a>
+            </div>
+        </div>
+
+        <h5>Existing Options</h5>
+        <ul class="list-group mb-3">
+            <li class="list-group-item d-flex justify-content-between align-items-center" th:each="opt : ${options}">
+                <div>
+                    <span th:text="${opt.text}" class="option-text">Option text</span>
+                    <span th:if="${opt.correct}" class="badge bg-success correct-badge">Correct</span>
+                    <span th:unless="${opt.correct}" class="badge bg-danger incorrect-badge">Not correct</span>
+                </div>
+                <div>
+                    <form th:action="@{/quizzes/{quizId}/questions/{questionId}/options/{id}/delete(quizId=${quizId},questionId=${question.id},id=${opt.id})}" method="post" style="display:inline">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </div>
+            </li>
+            <li th:if="${#lists.isEmpty(options)}" class="list-group-item">No options yet.</li>
+        </ul>
+
+        <h5>Add Option</h5>
+        <form th:action="@{/quizzes/{quizId}/questions/{questionId}/options(quizId=${quizId},questionId=${question.id})}" method="post">
+            <div class="mb-3">
+                <label for="text" class="form-label">Option text</label>
+                <input id="text" name="text" class="form-control" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Is correct?</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="correct" id="correctTrue" value="true">
+                    <label class="form-check-label" for="correctTrue">Correct</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="correct" id="correctFalse" value="false" checked>
+                    <label class="form-check-label" for="correctFalse">Not correct</label>
+                </div>
+            </div>
+            <button class="btn btn-success">Add Option</button>
+        </form>
+    </div>
+</body>
+</html>

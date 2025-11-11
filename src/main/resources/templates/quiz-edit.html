@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Quiz</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="p-4">
+    <div th:insert="~{fragments/header :: siteHeader}"></div>
+    <div class="container">
+        <!-- Debug info -->
+        <div th:if="${quiz == null}" class="alert alert-danger">
+            ERROR: Quiz object is null!
+        </div>
+        
+        <div th:if="${quiz != null}">
+            <h1>Edit "<span th:text="${quiz.title}">Quiz Name</span>"</h1>
+
+            <form th:action="@{/quizzes/{id}/edit(id=${quiz.id})}" method="post">
+            <!-- Error message display -->
+            <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+            
+            <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input type="text" class="form-control" id="title" name="title" 
+                       th:value="${quiz.title}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" 
+                         rows="3" th:text="${quiz.description}"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="course" class="form-label">Course</label>
+                <input type="text" class="form-control" id="course" name="course" 
+                       th:value="${quiz.course}" required>
+            </div>
+
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="published" name="published" 
+                       th:checked="${quiz.published}">
+                <label class="form-check-label" for="published">Published</label>
+            </div>
+
+                <button type="submit" class="btn btn-primary">Update Quiz</button>
+                <a th:href="@{/quizzes}" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
