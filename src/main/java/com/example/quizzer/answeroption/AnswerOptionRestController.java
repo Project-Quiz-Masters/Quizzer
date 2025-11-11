@@ -44,4 +44,19 @@ public class AnswerOptionRestController {
         answerOptionService.deleteAnswerOption(id);
         return ResponseEntity.noContent().build();
     }
+
+    //Osman's version
+    @DeleteMapping("/questions/{questionId}/answer-options/{answerOptionId}")
+    public ResponseEntity<Void> deleteAnswerOption(@PathVariable @NonNull Long questionId, @PathVariable @NonNull Long answerOptionId) {
+        if (!questionRepository.existsById(questionId)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (!answerOptionRepository.existsById(answerOptionId)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        answerOptionRepository.deleteById(answerOptionId);
+        return ResponseEntity.noContent().build();
+    }
 }
