@@ -7,6 +7,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface QuizRepository extends JpaRepository<Quiz, Long> {
-   List<Quiz> findByTeacherId(Long teacherId);
+    List<Quiz> findByTeacherId(Long teacherId);
+
     List<Quiz> findByTeacherIdAndPublishedTrue(Long teacherId);
+
+    List<Quiz> findByPublishedTrue(); // for ex. 20
+
 }
