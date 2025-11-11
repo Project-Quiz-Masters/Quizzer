@@ -10,7 +10,7 @@
 <body class="p-4">
     <div th:insert="~{fragments/header :: siteHeader}"></div>
     <div class="container">
-    <h1 class="mb-4" th:text="'Questions for: ' + ${quiz.title}">All Questions</h1>
+    <h1 class="mb-4" th:text="'Questions of &quot;' + ${quiz.title}+ '&quot;'">All Questions</h1>
 
     <div class="mb-3 d-flex justify-content-between">
         <a th:href="@{/quizzes}" class="btn btn-secondary">Back to Quizzes</a>

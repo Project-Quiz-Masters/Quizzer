@@ -11,7 +11,7 @@
 <body class="p-4">
     <div th:insert="~{fragments/header :: siteHeader}"></div>
     <div class="container">
-        <h1 class="mb-4" th:text="'Add Question to ' + ${quiz.title}">Add Question</h1>
+        <h1 class="mb-4" th:text="'Add a question to &quot;' + ${quiz.title}+'&quot;'">Add Question</h1>
 
         <!-- POST to the controller at /quizzes/{quizId}/questions -->
         <form th:action="@{/quizzes/{quizId}/questions(quizId=${quiz.id})}" method="post">

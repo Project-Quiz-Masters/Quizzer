@@ -27,7 +27,7 @@
             <tbody>
                 <tr th:each="quiz : ${quizzes}">
                     <td>
-                        <a th:href="@{/quizzes/{quizId}/questions/add(quizId=${quiz.id})}" th:text="${quiz.title}"></a>
+                        <a th:href="@{/quizzes/{quizId}/questions(quizId=${quiz.id})}" th:text="${quiz.title}"></a>
                     </td>
                     <td th:text="${quiz.description}">Sample Description</td>
                     <td th:text="${quiz.course}">Sample Course</td>

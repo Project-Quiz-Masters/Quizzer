@@ -44,7 +44,7 @@ public class AnswerOptionController {
     @PostMapping
     public String addOption(@PathVariable Long quizId, @PathVariable Long questionId,
                             @RequestParam String text,
-                            @RequestParam(required = false) boolean correct,
+                            @RequestParam(defaultValue = "false") boolean correct,
                             Model model) {
         Optional<Question> q = questionRepository.findById(questionId);
         if (q.isEmpty()) {
