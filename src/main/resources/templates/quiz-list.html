@@ -16,25 +16,20 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>ID</th>
                 <th>Title</th>
                 <th>Description</th>
                 <th>Course</th>
-                <th>Teacher ID</th>
                 <th>Published</th>
-                <th>Created At</th>
-                <th>Teacher ID</th>
+                <th>Added On</th>
             </tr>
         </thead>
         <tbody>
             <tr th:each="quiz : ${quizzes}">
-                <td th:text="${quiz.id}">1</td>
                 <td th:text="${quiz.title}">Sample Title</td>
                 <td th:text="${quiz.description}">Sample Description</td>
                 <td th:text="${quiz.course}">Sample Course</td>
                 <td th:text="${quiz.published}">false</td>
                 <td th:text="${quiz.createdAt}">2025-11-10T12:00</td>
-                <td th:text="${quiz.teacherId}">teacher1</td>
             </tr>
         </tbody>
     </table>
