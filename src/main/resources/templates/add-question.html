@@ -9,29 +9,38 @@
 
 
 <body class="p-4">
+    <div th:insert="~{fragments/header :: siteHeader}"></div>
     <div class="container">
         <h1 class="mb-4" th:text="'Add Question to ' + ${quiz.title}">Add Question</h1>
 
-        <form th:action="@{/questions}" th:object="${question}" method="post">
-
-            <input type="hidden" th:field="*{quiz.id}" th:value="${quiz.id}" />
+        <!-- POST to the controller at /quizzes/{quizId}/questions -->
+        <form th:action="@{/quizzes/{quizId}/questions(quizId=${quiz.id})}" method="post">
 
             <div class="mb-3">
                 <label for="text" class="form-label">Question Text</label>
-                <textarea class="form-control" id="text" th:field="*{text}" rows="3" required></textarea>
+                <textarea class="form-control" id="text" name="text" rows="3" required></textarea>
             </div>
 
             <div class="mb-3">
-                <label for="difficulty" class="form-label">Difficulty</label>
-                <select class="form-select" id="difficulty" th:field="*{difficulty}" required>
-                    <option value="Easy">Easy</option>
-                    <option value="Normal" selected>Normal</option>
-                    <option value="Hard">Hard</option>
-                </select>
+                <label class="form-label">Difficulty</label>
+                <div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="difficulty" id="diffEasy" value="Easy">
+                        <label class="form-check-label" for="diffEasy">Easy</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="difficulty" id="diffNormal" value="Normal" checked>
+                        <label class="form-check-label" for="diffNormal">Normal</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="difficulty" id="diffHard" value="Hard">
+                        <label class="form-check-label" for="diffHard">Hard</label>
+                    </div>
+                </div>
             </div>
 
             <button type="submit" class="btn btn-success">Add Question</button>
-            <a th:href="@{/quizzes/{id}(id=${quiz.id})}" class="btn btn-secondary">Back to Quiz</a>
+            <a th:href="@{/quizzes/{quizId}/questions(quizId=${quiz.id})}" class="btn btn-secondary">Back to Questions</a>
         </form>
     </div>
 </body>
