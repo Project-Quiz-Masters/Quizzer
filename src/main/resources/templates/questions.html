@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Questions</title>
+  </head>
+  <body>
+    <h2>Questions</h2>
+
+    <table border="1" cellpadding="5">
+      <thead>
+        <tr>
+          <th>Question text</th>
+          <th>Difficulty</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="question : ${questions}">
+          <td th:text="${question.text}"></td>
+          <td th:text="${question.difficulty}"></td>
+          <td>
+            <!-- 🔗 link to answer options -->
+            <a th:href="@{'/teacher/questions/' + ${question.id} + '/answers'}">
+              View Answers
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <br />
+    <a th:href="@{/teacher/questions/add}">
+      <button>Add a question</button>
+    </a>
+  </body>
+</html>

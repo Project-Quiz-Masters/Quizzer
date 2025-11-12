@@ -22,8 +22,8 @@ public class AnswerOption {
     public String getText() {return text;}
     public void setText(String text) {this.text = text;}
 
-    public Boolean isCorrect() {return correct;}
-    public void setCorrect(Boolean correct) {this.correct = correct;}
+    public boolean isCorrect() {return correct;}
+    public void setCorrect(boolean correct) {this.correct = correct;}
 
     public Question getQuestion() {return question;}
     public void setQuestion(Question question) {this.question = question;}
