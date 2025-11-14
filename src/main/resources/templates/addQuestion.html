@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Add Question</title>
+  </head>
+  <body>
+    <h2>Add New Question</h2>
+
+    <form
+      th:action="@{/teacher/questions/add}"
+      th:object="${question}"
+      method="post"
+    >
+      <label>Question Text:</label><br />
+      <input type="text" th:field="*{text}" required /><br /><br />
+
+      <label>Difficulty:</label><br />
+      <select th:field="*{difficulty}">
+        <option value="Easy">Easy</option>
+        <option value="Medium">Medium</option>
+        <option value="Hard">Hard</option></select
+      ><br /><br />
+
+      <button type="submit">Save</button>
+    </form>
+
+    <br />
+    <a th:href="@{/teacher/questions}">Back to Questions</a>
+  </body>
+</html>

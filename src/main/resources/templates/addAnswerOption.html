@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Add Answer Option</title>
+  </head>
+  <body>
+    <h2>Add an Answer Option</h2>
+
+    <form
+      th:action="@{'/teacher/questions/' + ${questionId} + '/answers/add'}"
+      th:object="${answerOption}"
+      method="post"
+    >
+      <label>Text:</label>
+      <input type="text" th:field="*{text}" required /><br /><br />
+
+      <label>Correct:</label>
+      <input type="checkbox" th:field="*{correct}" /><br /><br />
+
+      <button type="submit">Save</button>
+      <a th:href="@{'/teacher/questions/' + ${questionId} + '/answers'}">
+        <button type="button">Cancel</button>
+      </a>
+    </form>
+  </body>
+</html>
