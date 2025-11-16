@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.example.quizzer.answeroption.AnswerOption;
 import com.example.quizzer.quiz.Quiz;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -15,6 +14,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 @Entity
 public class Question {
@@ -27,11 +29,12 @@ public class Question {
 
     private String difficulty = "Normal";
 
+    @JsonBackReference
     @ManyToOne(optional = false)
     @JoinColumn(name = "quiz_id")
     private Quiz quiz;
 
-    @JsonIgnore
+    @JsonManagedReference
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AnswerOption> answerOptions = new ArrayList<>();
 

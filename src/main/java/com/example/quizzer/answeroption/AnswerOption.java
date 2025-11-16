@@ -2,6 +2,8 @@ package com.example.quizzer.answeroption;
 import com.example.quizzer.question.Question;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 
 @Entity
 public class AnswerOption {
@@ -12,6 +14,7 @@ public class AnswerOption {
     private String text;
     private boolean correct;
 
+    @JsonBackReference
     @ManyToOne(optional = false)
     @JoinColumn(name = "question_id")
     private Question question;

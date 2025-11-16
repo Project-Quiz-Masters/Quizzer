@@ -11,6 +11,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 @Entity
 public class Quiz {
@@ -27,6 +29,7 @@ public class Quiz {
     private Long teacherId; // Changed from String to Long
     
     // This cascade configuration ensures questions are deleted when quiz is deleted
+    @JsonManagedReference
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions;
     
