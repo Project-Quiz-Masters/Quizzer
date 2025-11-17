@@ -35,6 +35,13 @@
             <input type="number" class="form-control" id="teacherId" name="teacherId" required>
         </div>
 
+        <div class="mb-3">
+            <label for="categoryId" class="form-label">Category</label>
+            <select class="form-select" id="categoryId" name="categoryId">
+                <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}">No Category</option>
+            </select>
+        </div>
+
             <button type="submit" class="btn btn-success">Add Quiz</button>
             <a th:href="@{/quizzes}" class="btn btn-secondary">Back to List</a>
 

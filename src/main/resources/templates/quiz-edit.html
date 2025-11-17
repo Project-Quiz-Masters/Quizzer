@@ -38,6 +38,17 @@
                        th:value="${quiz.course}" required>
             </div>
 
+            <div class="mb-3">
+                <label for="categoryId" class="form-label">Category</label>
+                <select class="form-select" id="categoryId" name="categoryId">
+                    <option value="" th:text="'-- None --'" th:if="${quiz.category} == null" selected>-- None --</option>
+                    <option th:each="cat : ${categories}"
+                            th:value="${cat.id}"
+                            th:text="${cat.name}"
+                            th:selected="${quiz.category != null} ? ${cat.id} == ${quiz.category.id} : false"></option>
+                </select>
+            </div>
+
             <div class="mb-3 form-check">
                 <input type="checkbox" class="form-check-input" id="published" name="published" 
                        th:checked="${quiz.published}">

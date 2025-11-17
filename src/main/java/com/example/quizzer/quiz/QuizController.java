@@ -10,19 +10,24 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.quizzer.category.CategoryService;
+
 @Controller
 @RequestMapping("/quizzes")
 public class QuizController {
 
     private final QuizService quizService;
+    private final CategoryService categoryService;
 
-    public QuizController(QuizService quizService) {
+    public QuizController(QuizService quizService, CategoryService categoryService) {
         this.quizService = quizService;
+        this.categoryService = categoryService;
     }
 
     // USER STORY 1: Show create quiz form (Thymeleaf)
     @GetMapping("/new")
-    public String showAddQuizForm() {
+    public String showAddQuizForm(Model model) {
+        model.addAttribute("categories", categoryService.listCategories());
         return "quiz-form";
     }
 
@@ -31,11 +36,12 @@ public class QuizController {
     public String addQuiz(@RequestParam String title,
             @RequestParam String description,
             @RequestParam String course,
-            @RequestParam Long teacherId,
+        @RequestParam Long teacherId,
+        @RequestParam(required = false) Long categoryId,
             Model model) { // Added Model parameter for error handling
 
         try {
-            quizService.addQuiz(title, description, course, teacherId);
+            quizService.addQuiz(title, description, course, teacherId, categoryId);
             return "redirect:/quizzes";
         } catch (Exception e) {
             model.addAttribute("error", "Error creating quiz: " + e.getMessage());
@@ -83,6 +89,8 @@ public class QuizController {
             System.out.println("  - Published: " + q.isPublished());
 
             model.addAttribute("quiz", q);
+            // Add categories for the category selector
+            model.addAttribute("categories", categoryService.listCategories());
             System.out.println("Returning quiz-edit template");
             return "quiz-edit";
         } else {
@@ -98,9 +106,10 @@ public class QuizController {
             @RequestParam String description,
             @RequestParam String course,
             @RequestParam(defaultValue = "false") boolean published,
+            @RequestParam(required = false) Long categoryId,
             Model model) {
         try {
-            quizService.updateQuiz(id, title, description, course, published);
+            quizService.updateQuiz(id, title, description, course, published, categoryId);
             // FIXED: Redirect to quiz list instead of individual quiz page
             return "redirect:/quizzes";
         } catch (Exception e) {

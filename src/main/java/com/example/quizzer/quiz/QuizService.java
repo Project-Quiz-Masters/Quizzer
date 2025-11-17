@@ -12,6 +12,9 @@ public class QuizService {
     @Autowired
     private QuizRepository quizRepository;
     
+    @Autowired
+    private com.example.quizzer.category.CategoryService categoryService;
+    
     /**
      * Create a new quiz (simple version)
      */
@@ -27,6 +30,17 @@ public class QuizService {
     public Quiz addQuiz(String title, String description, String course, Long teacherId) {
         // FIXED: Use the constructor properly
         Quiz quiz = new Quiz(title, description, course, teacherId);
+        return quizRepository.save(quiz);
+    }
+
+    /**
+     * Add quiz with optional category id
+     */
+    public Quiz addQuiz(String title, String description, String course, Long teacherId, Long categoryId) {
+        Quiz quiz = new Quiz(title, description, course, teacherId);
+        if (categoryId != null) {
+            categoryService.getCategoryById(categoryId).ifPresent(quiz::setCategory);
+        }
         return quizRepository.save(quiz);
     }
 
@@ -63,6 +77,29 @@ public class QuizService {
         quiz.setDescription(description);
         quiz.setCourse(course);
         quiz.setPublished(published);
+        return quizRepository.save(quiz);
+    }
+
+    /**
+     * Update quiz and optionally its category
+     */
+    public Quiz updateQuiz(Long id, String title, String description, String course, boolean published, Long categoryId) {
+        Optional<Quiz> existingQuiz = quizRepository.findById(id);
+        
+        if (existingQuiz.isEmpty()) {
+            throw new IllegalArgumentException("Quiz with ID " + id + " not found");
+        }
+        
+        Quiz quiz = existingQuiz.get();
+        quiz.setTitle(title);
+        quiz.setDescription(description);
+        quiz.setCourse(course);
+        quiz.setPublished(published);
+        if (categoryId != null) {
+            categoryService.getCategoryById(categoryId).ifPresent(quiz::setCategory);
+        } else {
+            quiz.setCategory(null);
+        }
         return quizRepository.save(quiz);
     }
 
