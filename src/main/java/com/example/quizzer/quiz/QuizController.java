@@ -2,19 +2,13 @@ package com.example.quizzer.quiz;
 
 import java.util.Optional;
 
-import org.springframework.http.ResponseEntity;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/quizzes")
@@ -128,27 +122,5 @@ public class QuizController {
     }
 
     // REST endpoint for getting quiz by ID (if needed for APIs)
-    @GetMapping("/api/{id}")
-    @ResponseBody
-    public ResponseEntity<Quiz> getQuizByIdApi(@PathVariable Long id) {
-        return quizService.getQuizById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    // REST endpoint for updating quiz (if needed for APIs)
-    @PutMapping("/api/{id}")
-    @ResponseBody
-    public ResponseEntity<Quiz> updateQuizApi(@PathVariable Long id, @RequestBody Quiz quizDetails) {
-        Quiz updatedQuiz = quizService.updateQuiz(id, quizDetails);
-        return updatedQuiz != null ? ResponseEntity.ok(updatedQuiz) : ResponseEntity.notFound().build();
-    }
-
-    // REST endpoint for deleting quiz (if needed for APIs)
-    @DeleteMapping("/api/{id}")
-    @ResponseBody
-    public ResponseEntity<Void> deleteQuizApi(@PathVariable Long id) {
-        quizService.deleteQuiz(id);
-        return ResponseEntity.noContent().build();
-    }
+    // Note: API endpoints moved to QuizRestController to keep REST API under /api/*
 }
