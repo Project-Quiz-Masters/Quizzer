@@ -146,6 +146,31 @@ public class QuizService {
         quiz.setCategory(maybeCat.get());
         return quizRepository.save(quiz);
     }
+
+    /**
+     * Assign a category to a quiz with explicit checks.
+     * Throws IllegalArgumentException if the quiz or category does not exist.
+     */
+    public Quiz assignCategoryToQuiz(Long quizId, Long categoryId) {
+        Optional<Quiz> existingQuiz = quizRepository.findById(quizId);
+        if (existingQuiz.isEmpty()) {
+            throw new IllegalArgumentException("Quiz with ID " + quizId + " not found");
+        }
+
+        Quiz quiz = existingQuiz.get();
+        if (categoryId == null) {
+            quiz.setCategory(null);
+            return quizRepository.save(quiz);
+        }
+
+        var maybeCat = categoryService.getCategoryById(categoryId);
+        if (maybeCat.isEmpty()) {
+            throw new IllegalArgumentException("Category with ID " + categoryId + " not found");
+        }
+
+        quiz.setCategory(maybeCat.get());
+        return quizRepository.save(quiz);
+    }
     
     /**
      * Delete a quiz

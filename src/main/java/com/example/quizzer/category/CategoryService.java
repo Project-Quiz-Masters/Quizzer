@@ -28,4 +28,19 @@ public class CategoryService {
     public void deleteCategory(Long id) {
         categoryRepository.deleteById(id);
     }
+
+    /**
+     * Update a category. Returns the updated category or null if not found.
+     */
+    public Category updateCategory(Long id, Category payload) {
+        return categoryRepository.findById(id).map(existing -> {
+            existing.setName(payload.getName());
+            existing.setDescription(payload.getDescription());
+            return categoryRepository.save(existing);
+        }).orElse(null);
+    }
+
+    public boolean existsById(Long id) {
+        return categoryRepository.existsById(id);
+    }
 }

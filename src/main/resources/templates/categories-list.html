@@ -26,7 +26,7 @@
                     <td th:text="${cat.name}">Sample</td>
                     <td th:text="${cat.description}">Description</td>
                     <td class="text-end">
-                        <form th:action="@{/categories/{id}/delete(id=${cat.id})}" method="post" style="display:inline;">
+                        <form th:action="@{/categories/{categoryId}/delete(categoryId=${cat.id})}" method="post" style="display:inline;">
                             <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete category?')">Delete</button>
                         </form>
                     </td>
