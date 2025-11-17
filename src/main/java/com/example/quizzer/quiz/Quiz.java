@@ -7,6 +7,7 @@ import com.example.quizzer.question.Question;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -29,8 +30,8 @@ public class Quiz {
     private Long teacherId; // Changed from String to Long
     
     // This cascade configuration ensures questions are deleted when quiz is deleted
-    @JsonManagedReference
-    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("quiz-questions")
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Question> questions;
     
     // Constructors

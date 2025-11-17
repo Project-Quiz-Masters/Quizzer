@@ -29,12 +29,12 @@ public class Question {
 
     private String difficulty = "Normal";
 
-    @JsonBackReference
+    @JsonBackReference("quiz-questions")
     @ManyToOne(optional = false)
     @JoinColumn(name = "quiz_id")
     private Quiz quiz;
 
-    @JsonManagedReference
+    @JsonManagedReference("question-options")
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AnswerOption> answerOptions = new ArrayList<>();
 

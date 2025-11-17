@@ -14,7 +14,7 @@ public class AnswerOption {
     private String text;
     private boolean correct;
 
-    @JsonBackReference
+    @JsonBackReference("question-options")
     @ManyToOne(optional = false)
     @JoinColumn(name = "question_id")
     private Question question;

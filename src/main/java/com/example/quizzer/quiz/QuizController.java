@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.quizzer.dto.QuizDTO;
+import com.example.quizzer.dto.QuizMapper;
+
 @RestController
 @RequestMapping("/api/quizzes")
 @CrossOrigin(origins = "*")
@@ -138,7 +141,15 @@ public class QuizController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // REST endpoint for updating quiz (if needed for APIs)
+    @GetMapping("/public/{id}")
+    @ResponseBody
+    public ResponseEntity<QuizDTO> getPublicQuiz(@PathVariable Long id) {
+        return quizService.getQuizById(id)
+                .map(quiz -> ResponseEntity.ok(QuizMapper.toDTO(quiz)))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    
     @PutMapping("/api/{id}")
     @ResponseBody
     public ResponseEntity<Quiz> updateQuizApi(@PathVariable Long id, @RequestBody Quiz quizDetails) {
