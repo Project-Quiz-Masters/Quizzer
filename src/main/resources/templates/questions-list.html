@@ -33,7 +33,7 @@
                     </td>
                     <td th:text="${question.difficulty}">Normal</td>
                     <td>
-                        <a th:href="@{/quizzes/{id}(id=${question.quiz.id})}" th:text="${question.quiz.title}">Sample Quiz</a>
+                        <a th:href="@{/quizzes/{quizId}(quizId=${question.quiz.id})}" th:text="${question.quiz.title}">Sample Quiz</a>
                     </td>
                     <td class="text-end">
                         <form th:action="@{/quizzes/{quizId}/questions/{questionId}/delete(quizId=${quiz.id},questionId=${question.id})}" method="post" style="display:inline">

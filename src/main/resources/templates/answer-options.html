@@ -29,7 +29,7 @@
                     <span th:unless="${opt.correct}" class="badge bg-danger incorrect-badge">Not correct</span>
                 </div>
                 <div>
-                    <form th:action="@{/quizzes/{quizId}/questions/{questionId}/options/{id}/delete(quizId=${quizId},questionId=${question.id},id=${opt.id})}" method="post" style="display:inline">
+                    <form th:action="@{/quizzes/{quizId}/questions/{questionId}/options/{answerOptionId}/delete(quizId=${quizId},questionId=${question.id},answerOptionId=${opt.id})}" method="post" style="display:inline">
                         <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this option?')">Delete</button>
                     </form>
                 </div>

@@ -16,7 +16,7 @@
         <div th:if="${quiz != null}">
             <h1>Edit "<span th:text="${quiz.title}">Quiz Name</span>"</h1>
 
-            <form th:action="@{/quizzes/{id}/edit(id=${quiz.id})}" method="post">
+            <form th:action="@{/quizzes/{quizId}/edit(quizId=${quiz.id})}" method="post">
             <!-- Error message display -->
             <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
             

@@ -58,9 +58,9 @@ public class QuizController {
     }
 
     // USER STORY 2: View single quiz (Thymeleaf)
-    @GetMapping("/{id}")
-    public String viewQuiz(@PathVariable Long id, Model model) {
-        Optional<Quiz> quiz = quizService.getQuizById(id);
+    @GetMapping("/{quizId}")
+    public String viewQuiz(@PathVariable("quizId") Long quizId, Model model) {
+        Optional<Quiz> quiz = quizService.getQuizById(quizId);
         if (quiz.isPresent()) {
             model.addAttribute("quiz", quiz.get());
             return "quiz-detail";
@@ -70,12 +70,12 @@ public class QuizController {
     }
 
     // Show edit form
-    @GetMapping("/{id}/edit")
-    public String showEditQuizForm(@PathVariable Long id, Model model) {
+    @GetMapping("/{quizId}/edit")
+    public String showEditQuizForm(@PathVariable("quizId") Long quizId, Model model) {
         System.out.println("=== DEBUG EDIT ===");
-        System.out.println("Requested quiz ID: " + id);
+        System.out.println("Requested quiz ID: " + quizId);
 
-        Optional<Quiz> quiz = quizService.getQuizById(id);
+        Optional<Quiz> quiz = quizService.getQuizById(quizId);
         System.out.println("Quiz found in database: " + quiz.isPresent());
 
         if (quiz.isPresent()) {
@@ -94,14 +94,14 @@ public class QuizController {
             System.out.println("Returning quiz-edit template");
             return "quiz-edit";
         } else {
-            System.out.println("ERROR: No quiz found with ID: " + id);
-            model.addAttribute("error", "Quiz not found with ID: " + id);
+            System.out.println("ERROR: No quiz found with ID: " + quizId);
+            model.addAttribute("error", "Quiz not found with ID: " + quizId);
             return "error";
         }
     }
 
-    @PostMapping("/{id}/edit")
-    public String updateQuiz(@PathVariable Long id,
+    @PostMapping("/{quizId}/edit")
+    public String updateQuiz(@PathVariable("quizId") Long quizId,
             @RequestParam String title,
             @RequestParam String description,
             @RequestParam String course,
@@ -109,13 +109,13 @@ public class QuizController {
             @RequestParam(required = false) Long categoryId,
             Model model) {
         try {
-            quizService.updateQuiz(id, title, description, course, published, categoryId);
+            quizService.updateQuiz(quizId, title, description, course, published, categoryId);
             // FIXED: Redirect to quiz list instead of individual quiz page
             return "redirect:/quizzes";
         } catch (Exception e) {
             model.addAttribute("error", "Error updating quiz: " + e.getMessage());
             // Re-populate the quiz data for the form
-            Optional<Quiz> quiz = quizService.getQuizById(id);
+            Optional<Quiz> quiz = quizService.getQuizById(quizId);
             if (quiz.isPresent()) {
                 model.addAttribute("quiz", quiz.get());
             }
@@ -124,9 +124,9 @@ public class QuizController {
     }
 
     // USER STORY 4: Delete quiz (Thymeleaf)
-    @PostMapping("/{id}/delete")
-    public String deleteQuiz(@PathVariable Long id) {
-        quizService.deleteQuiz(id);
+    @PostMapping("/{quizId}/delete")
+    public String deleteQuiz(@PathVariable("quizId") Long quizId) {
+        quizService.deleteQuiz(quizId);
         return "redirect:/quizzes";
     }
 
