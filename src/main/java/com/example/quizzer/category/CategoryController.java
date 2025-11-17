@@ -36,9 +36,16 @@ public class CategoryController {
     }
 
     @PostMapping("/{categoryId}/delete")
-    public String deleteCategory(@PathVariable("categoryId") Long categoryId) {
-        categoryService.deleteCategory(categoryId);
-        return "redirect:/categories";
+    public String deleteCategory(@PathVariable("categoryId") Long categoryId, Model model) {
+        try {
+            categoryService.deleteCategory(categoryId);
+            return "redirect:/categories";
+        } catch (IllegalStateException e) {
+            // Category is in use; show an error on the categories list page
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("categories", categoryService.listCategories());
+            return "categories-list";
+        }
     }
 
 }

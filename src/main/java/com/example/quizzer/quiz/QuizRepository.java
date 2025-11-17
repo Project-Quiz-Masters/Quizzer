@@ -13,4 +13,7 @@ public interface QuizRepository extends JpaRepository<Quiz, Long> {
 
     List<Quiz> findByPublishedTrue(); // for ex. 20
 
+    // Find quizzes that belong to a category (by category id)
+    List<Quiz> findByCategoryId(Long categoryId);
+
 }

@@ -20,7 +20,7 @@ public class AnswerOptionService {
         return answerOptionRepository.save(answerOption);
     }
 
-    public void deleteAnswerOption(Long id) {
-        answerOptionRepository.deleteById(id);
+    public void deleteAnswerOption(Long answerOptionId) {
+        answerOptionRepository.deleteById(answerOptionId);
     }
 }

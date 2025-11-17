@@ -58,18 +58,18 @@ public class QuizService {
     /**
      * Get a quiz by ID
      */
-    public Optional<Quiz> getQuizById(Long id) {
-        return quizRepository.findById(id);
+    public Optional<Quiz> getQuizById(Long quizId) {
+        return quizRepository.findById(quizId);
     }
 
     /**
      * Update a quiz with all fields (for Thymeleaf forms)
      */
-    public Quiz updateQuiz(Long id, String title, String description, String course, boolean published) {
-        Optional<Quiz> existingQuiz = quizRepository.findById(id);
+    public Quiz updateQuiz(Long quizId, String title, String description, String course, boolean published) {
+        Optional<Quiz> existingQuiz = quizRepository.findById(quizId);
         
         if (existingQuiz.isEmpty()) {
-            throw new IllegalArgumentException("Quiz with ID " + id + " not found");
+            throw new IllegalArgumentException("Quiz with ID " + quizId + " not found");
         }
         
         Quiz quiz = existingQuiz.get();
@@ -83,11 +83,11 @@ public class QuizService {
     /**
      * Update quiz and optionally its category
      */
-    public Quiz updateQuiz(Long id, String title, String description, String course, boolean published, Long categoryId) {
-        Optional<Quiz> existingQuiz = quizRepository.findById(id);
+    public Quiz updateQuiz(Long quizId, String title, String description, String course, boolean published, Long categoryId) {
+        Optional<Quiz> existingQuiz = quizRepository.findById(quizId);
         
         if (existingQuiz.isEmpty()) {
-            throw new IllegalArgumentException("Quiz with ID " + id + " not found");
+            throw new IllegalArgumentException("Quiz with ID " + quizId + " not found");
         }
         
         Quiz quiz = existingQuiz.get();
@@ -106,8 +106,8 @@ public class QuizService {
     /**
      * Update a quiz with Quiz object (for REST APIs)
      */
-    public Quiz updateQuiz(Long id, Quiz quizDetails) {
-        Optional<Quiz> existingQuiz = quizRepository.findById(id);
+    public Quiz updateQuiz(Long quizId, Quiz quizDetails) {
+        Optional<Quiz> existingQuiz = quizRepository.findById(quizId);
         
         if (existingQuiz.isEmpty()) {
             return null;
@@ -175,20 +175,20 @@ public class QuizService {
     /**
      * Delete a quiz
      */
-    public void deleteQuiz(Long id) {
-        if (!quizRepository.existsById(id)) {
-            throw new IllegalArgumentException("Quiz with ID " + id + " not found");
+    public void deleteQuiz(Long quizId) {
+        if (!quizRepository.existsById(quizId)) {
+            throw new IllegalArgumentException("Quiz with ID " + quizId + " not found");
         }
-        quizRepository.deleteById(id);
+        quizRepository.deleteById(quizId);
     }
 
     /**
      * Delete quiz with teacher authorization
      */
-    public boolean deleteQuiz(Long id, Long teacherId) {
-        Optional<Quiz> quiz = quizRepository.findById(id);
+    public boolean deleteQuiz(Long quizId, Long teacherId) {
+        Optional<Quiz> quiz = quizRepository.findById(quizId);
         if (quiz.isPresent() && quiz.get().getTeacherId().equals(teacherId)) {
-            quizRepository.deleteById(id);
+            quizRepository.deleteById(quizId);
             return true;
         }
         return false;
