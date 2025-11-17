@@ -61,4 +61,26 @@ public class QuizRestController {
       return ResponseEntity.notFound().build();
     }
   }
+
+  // PUT /api/quizzes/{quizId}/category - assign or clear category for quiz
+  public static class AssignCategoryDto {
+    private Long categoryId;
+
+    public Long getCategoryId() { return categoryId; }
+    public void setCategoryId(Long categoryId) { this.categoryId = categoryId; }
+  }
+
+  @PutMapping("/quizzes/{quizId}/category")
+  public ResponseEntity<Quiz> assignCategory(@PathVariable Long quizId, @RequestBody AssignCategoryDto payload) {
+    if (payload == null) {
+      return ResponseEntity.badRequest().build();
+    }
+
+    Long categoryId = payload.getCategoryId();
+    Quiz updated = quizService.assignCategory(quizId, categoryId);
+    if (updated == null) {
+      return ResponseEntity.notFound().build();
+    }
+    return ResponseEntity.ok(updated);
+  }
 }

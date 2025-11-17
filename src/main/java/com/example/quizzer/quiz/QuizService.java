@@ -121,6 +121,31 @@ public class QuizService {
         // Don't update teacherId for security
         return quizRepository.save(quiz);
     }
+
+    /**
+     * Assign a category to a quiz. Returns the updated quiz or null if quiz or category not found.
+     */
+    public Quiz assignCategory(Long quizId, Long categoryId) {
+        Optional<Quiz> existingQuiz = quizRepository.findById(quizId);
+        if (existingQuiz.isEmpty()) {
+            return null;
+        }
+
+        Quiz quiz = existingQuiz.get();
+        if (categoryId == null) {
+            // clear category
+            quiz.setCategory(null);
+            return quizRepository.save(quiz);
+        }
+
+        var maybeCat = categoryService.getCategoryById(categoryId);
+        if (maybeCat.isEmpty()) {
+            return null;
+        }
+
+        quiz.setCategory(maybeCat.get());
+        return quizRepository.save(quiz);
+    }
     
     /**
      * Delete a quiz
