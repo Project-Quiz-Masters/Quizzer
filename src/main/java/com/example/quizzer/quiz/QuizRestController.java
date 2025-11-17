@@ -77,10 +77,12 @@ public class QuizRestController {
     }
 
     Long categoryId = payload.getCategoryId();
-    Quiz updated = quizService.assignCategory(quizId, categoryId);
-    if (updated == null) {
-      return ResponseEntity.notFound().build();
+    try {
+      Quiz updated = quizService.assignCategoryToQuiz(quizId, categoryId);
+      return ResponseEntity.ok(updated);
+    } catch (IllegalArgumentException e) {
+      // Differentiate messages if needed; return 404 for not-found cases
+      return ResponseEntity.status(org.springframework.http.HttpStatus.NOT_FOUND).build();
     }
-    return ResponseEntity.ok(updated);
   }
 }
