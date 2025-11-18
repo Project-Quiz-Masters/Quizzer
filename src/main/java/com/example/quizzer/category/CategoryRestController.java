@@ -37,7 +37,7 @@ public class CategoryRestController {
         return c.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping
+    @PostMapping("/categories")
     public ResponseEntity<Category> createCategory(@RequestBody Category payload) {
         if (payload == null || payload.getName() == null || payload.getName().isBlank()) {
             return ResponseEntity.badRequest().build();
