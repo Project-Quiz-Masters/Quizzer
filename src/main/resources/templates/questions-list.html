@@ -22,7 +22,6 @@
                 <tr>
                     <th>Question Text</th>
                     <th>Difficulty</th>
-                    <th>Quiz</th>
                     <th class="text-end">Actions</th>
                 </tr>
             </thead>
@@ -32,9 +31,6 @@
                         <a th:href="@{/quizzes/{quizId}/questions/{questionId}/options(quizId=${quiz.id},questionId=${question.id})}" th:text="${question.text}">Sample Question</a>
                     </td>
                     <td th:text="${question.difficulty}">Normal</td>
-                    <td>
-                        <a th:href="@{/quizzes/{quizId}(quizId=${question.quiz.id})}" th:text="${question.quiz.title}">Sample Quiz</a>
-                    </td>
                     <td class="text-end">
                         <form th:action="@{/quizzes/{quizId}/questions/{questionId}/delete(quizId=${quiz.id},questionId=${question.id})}" method="post" style="display:inline">
                             <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete this question?')">Delete</button>
