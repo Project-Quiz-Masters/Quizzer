@@ -25,14 +25,27 @@ public class CategoryController {
     }
 
     @GetMapping("/new")
-    public String showAddForm() {
+    public String showAddForm(Model model) {
+        // Any flash attributes (error, success, name, description) will be available in the model
         return "add-category";
     }
 
     @PostMapping
-    public String addCategory(@RequestParam String name, @RequestParam String description) {
-        categoryService.addCategory(name, description);
-        return "redirect:/categories";
+    public String addCategory(@RequestParam String name, @RequestParam String description,
+                              org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+        try {
+            categoryService.addCategory(name, description);
+            redirectAttributes.addFlashAttribute("success",
+                    String.format("Category '%s' added successfully.", name));
+            return "redirect:/categories";
+        } catch (IllegalArgumentException e) {
+            // Duplicate name - redirect back to the add form and show error
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            // keep entered values so the user doesn't need to re-type
+            redirectAttributes.addFlashAttribute("name", name);
+            redirectAttributes.addFlashAttribute("description", description);
+            return "redirect:/categories/new";
+        }
     }
 
     @PostMapping("/{categoryId}/delete")

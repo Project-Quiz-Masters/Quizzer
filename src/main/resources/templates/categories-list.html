@@ -15,7 +15,8 @@
             <a th:href="@{/quizzes}" class="btn btn-secondary ms-2">Back to quizzes</a>
         </div>
 
-        <div th:if="${error}" class="alert alert-warning" th:text="${error}"></div>
+    <div th:if="${error}" class="alert alert-warning" th:text="${error}"></div>
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
 
         <table class="table table-striped">
             <thead>

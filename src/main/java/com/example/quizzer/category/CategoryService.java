@@ -16,6 +16,11 @@ public class CategoryService {
     private com.example.quizzer.quiz.QuizRepository quizRepository;
 
     public Category addCategory(String name, String description) {
+        // Check for duplicate category name
+        if (categoryRepository.existsByName(name)) {
+            throw new IllegalArgumentException(String.format("Category name '%s' is already taken", name));
+        }
+
         Category c = new Category(name, description);
         return categoryRepository.save(c);
     }
