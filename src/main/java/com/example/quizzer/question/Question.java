@@ -27,6 +27,7 @@ public class Question {
 
     private String difficulty = "Normal";
 
+    @JsonIgnore
     @ManyToOne(optional = false)
     @JoinColumn(name = "quiz_id")
     private Quiz quiz;
