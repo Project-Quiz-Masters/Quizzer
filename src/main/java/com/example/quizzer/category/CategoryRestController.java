@@ -67,4 +67,14 @@ public class CategoryRestController {
         categoryService.deleteCategory(categoryId);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/categories/{categoryId}/quizzes")
+    public ResponseEntity<List<com.example.quizzer.quiz.Quiz>> getPublishedQuizzesByCategory(@PathVariable("categoryId") Long categoryId) {
+        if (!categoryService.existsById(categoryId)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<com.example.quizzer.quiz.Quiz> quizzes = categoryService.listPublishedQuizzesByCategory(categoryId);
+        return ResponseEntity.ok(quizzes);
+    }
 }

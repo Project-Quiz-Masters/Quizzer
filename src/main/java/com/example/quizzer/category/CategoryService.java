@@ -56,4 +56,12 @@ public class CategoryService {
     public boolean existsById(Long categoryId) {
         return categoryRepository.existsById(categoryId);
     }
+
+    /**
+     * List published quizzes for a given category id.
+     * Returns empty list when there are no published quizzes for the category.
+     */
+    public List<com.example.quizzer.quiz.Quiz> listPublishedQuizzesByCategory(Long categoryId) {
+        return quizRepository.findByCategoryIdAndPublishedTrue(categoryId);
+    }
 }
