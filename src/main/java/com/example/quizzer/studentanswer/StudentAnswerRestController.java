@@ -1,11 +1,15 @@
 package com.example.quizzer.studentanswer;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.example.quizzer.dto.QuestionResultDTO;
 import com.example.quizzer.dto.StudentAnswerDTO;
+
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -41,6 +45,25 @@ public class StudentAnswerRestController {
             return ResponseEntity.status(ex.getStatusCode()).body(null);
         } catch (Exception ex) {
 
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    // adding endpoint to get quiz results
+    @Operation(summary = "Get quiz results", description = "Returns the total, correct, and wrong answers per question for a given quiz")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Quiz results retrieved successfully"),
+            @ApiResponse(responseCode = "404", description = "Quiz with the provided id does not exist"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping("/quiz/{quizId}/results")
+    public ResponseEntity<List<QuestionResultDTO>> getQuizResults(@PathVariable Long quizId) {
+        try {
+            List<QuestionResultDTO> results = studentAnswerService.getQuizResults(quizId);
+            return ResponseEntity.ok(results);
+        } catch (ResponseStatusException ex) {
+            return ResponseEntity.status(ex.getStatusCode()).body(null);
+        } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
