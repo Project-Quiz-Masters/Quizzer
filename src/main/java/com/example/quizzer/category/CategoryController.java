@@ -23,6 +23,7 @@ public class CategoryController {
         model.addAttribute("categories", categoryService.listCategories());
         return "categories-list";
     }
+
     @GetMapping("/new")
     public String showAddForm(Model model) {
         model.addAttribute("category", new Category());
@@ -31,7 +32,7 @@ public class CategoryController {
 
     @PostMapping
     public String addCategory(@RequestParam String name, @RequestParam String description,
-                              org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+            org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
         try {
             categoryService.addCategory(name, description);
             redirectAttributes.addFlashAttribute("success",
