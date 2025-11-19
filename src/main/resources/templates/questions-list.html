@@ -7,14 +7,14 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 
-<body class="p-4">
+<body>
     <div th:insert="~{fragments/header :: siteHeader}"></div>
-    <div class="container">
+    <div class="container mt-4">
     <h1 class="mb-4" th:text="'Questions of &quot;' + ${quiz.title}+ '&quot;'">All Questions</h1>
 
     <div class="mb-3 d-flex justify-content-between">
-        <a th:href="@{/quizzes}" class="btn btn-secondary">Back to Quizzes</a>
         <a th:href="@{/quizzes/{quizId}/questions/add(quizId=${quiz.id})}" class="btn btn-primary">Add New Question</a>
+        <a th:href="@{/quizzes}" class="btn btn-secondary">Back to Quizzes</a>
     </div>
 
         <table class="table table-striped">
@@ -22,7 +22,6 @@
                 <tr>
                     <th>Question Text</th>
                     <th>Difficulty</th>
-                    <th>Quiz</th>
                     <th class="text-end">Actions</th>
                 </tr>
             </thead>
@@ -32,9 +31,6 @@
                         <a th:href="@{/quizzes/{quizId}/questions/{questionId}/options(quizId=${quiz.id},questionId=${question.id})}" th:text="${question.text}">Sample Question</a>
                     </td>
                     <td th:text="${question.difficulty}">Normal</td>
-                    <td>
-                        <a th:href="@{/quizzes/{id}(id=${question.quiz.id})}" th:text="${question.quiz.title}">Sample Quiz</a>
-                    </td>
                     <td class="text-end">
                         <form th:action="@{/quizzes/{quizId}/questions/{questionId}/delete(quizId=${quiz.id},questionId=${question.id})}" method="post" style="display:inline">
                             <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete this question?')">Delete</button>

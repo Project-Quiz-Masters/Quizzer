@@ -39,11 +39,11 @@ public class AnswerOptionRestController {
             } return ResponseEntity.ok(answerOptionService.addAnswerOption(answerOption));
     }
     
-    @DeleteMapping("/answer-options/{id}")
-    public ResponseEntity<Void> deleteAnswerOption(@PathVariable Long id){
-        answerOptionService.deleteAnswerOption(id);
-        return ResponseEntity.noContent().build();
-    }
+    // @DeleteMapping("/answer-options/{answerOptionId}")
+    // public ResponseEntity<Void> deleteAnswerOption(@PathVariable Long answerOptionId){
+    //     answerOptionService.deleteAnswerOption(answerOptionId);
+    //     return ResponseEntity.noContent().build();
+    // }
 
     //Osman's version
     @DeleteMapping("/questions/{questionId}/answer-options/{answerOptionId}")

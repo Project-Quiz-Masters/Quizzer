@@ -23,7 +23,7 @@ import com.example.quizzer.quiz.QuizRepository;
  * - GET /quizzes/{quizId}/questions/add -> Show add question form
  * - POST /quizzes/{quizId}/questions -> Create new question
  * - GET /quizzes/{quizId}/questions -> Show list of questions
- * - POST /quizzes/{quizId}/questions/{id}/delete -> Delete question
+ * - POST /quizzes/{quizId}/questions/{questionId}/delete -> Delete question
  */
 @Controller
 @RequestMapping("/quizzes/{quizId}/questions")
