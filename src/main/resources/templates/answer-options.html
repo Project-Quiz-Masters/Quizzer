@@ -11,16 +11,15 @@
         .incorrect-badge { margin-left: .5rem; }
     </style>
 </head>
-<body class="p-4">
+<body>
     <div th:insert="~{fragments/header :: siteHeader}"></div>
-    <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="container mt-4">
+        <div class="mb-3">
             <h2>Answer options of "<span th:text="${question.text}">Question</span>"</h2>
-            <div>
+            <div class="d-flex justify-content-end mt-2">
                 <a th:href="@{/quizzes/{quizId}/questions(quizId=${quizId})}" class="btn btn-secondary">Back to Questions</a>
             </div>
         </div>
-
         <h5>Existing Options</h5>
         <ul class="list-group mb-3">
             <li class="list-group-item d-flex justify-content-between align-items-center" th:each="opt : ${options}">
@@ -30,8 +29,8 @@
                     <span th:unless="${opt.correct}" class="badge bg-danger incorrect-badge">Not correct</span>
                 </div>
                 <div>
-                    <form th:action="@{/quizzes/{quizId}/questions/{questionId}/options/{id}/delete(quizId=${quizId},questionId=${question.id},id=${opt.id})}" method="post" style="display:inline">
-                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    <form th:action="@{/quizzes/{quizId}/questions/{questionId}/options/{answerOptionId}/delete(quizId=${quizId},questionId=${question.id},answerOptionId=${opt.id})}" method="post" style="display:inline">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this option?')">Delete</button>
                     </form>
                 </div>
             </li>

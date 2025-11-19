@@ -36,10 +36,10 @@ public class QuestionRestController {
      * Get all questions for a specific quiz
      */
     @GetMapping("/quizzes/{quizId}/questions")
-    public ResponseEntity<List<Question>> getQuestionsByQuiz(@PathVariable Long quizId) {
+    public ResponseEntity<?> getQuestionsByQuiz(@PathVariable Long quizId) {
         Optional<Quiz> quiz = quizRepository.findById(quizId);
         if (quiz.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(404).body("Quiz not found");
         }
         List<Question> questions = questionService.getQuestionsByQuiz(quizId);
         return ResponseEntity.ok(questions);
@@ -49,17 +49,20 @@ public class QuestionRestController {
      * Get a specific question by ID
      */
     @GetMapping("/questions/{questionId}")
-    public ResponseEntity<Question> getQuestion(@PathVariable Long questionId) {
+    public ResponseEntity<?> getQuestion(@PathVariable Long questionId) {
         Optional<Question> question = questionRepository.findById(questionId);
-        return question.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        if (question.isPresent()) {
+            return ResponseEntity.ok(question.get());
+        } else {
+            return ResponseEntity.status(404).body("Question not found");
+        }
     }
 
     /**
      * Create a new question for a quiz
      */
     @PostMapping("/quizzes/{quizId}/questions")
-    public ResponseEntity<Question> createQuestion(
+    public ResponseEntity<?> createQuestion(
             @PathVariable Long quizId,
             @RequestBody Question question) {
         try {
@@ -70,7 +73,7 @@ public class QuestionRestController {
             );
             return ResponseEntity.ok(createdQuestion);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
