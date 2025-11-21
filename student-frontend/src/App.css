@@ -402,3 +402,21 @@
   font-size: 1.1rem;
   color: #666;
 }
+
+/* Back Button */
+.back-button {
+  background-color: transparent;
+  border: 1px solid #1976d2;
+  color: #1976d2;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.back-button:hover {
+  background-color: #1976d2;
+  color: white;
+}

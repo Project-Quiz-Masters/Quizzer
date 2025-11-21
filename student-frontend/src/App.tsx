@@ -2,6 +2,7 @@ import { Routes, Route, Link, Navigate } from "react-router-dom";
 import QuizzesList from "./pages/QuizzesList";
 import QuizDetails from "./pages/QuizDetails.tsx";
 import CategoriesList from "./pages/CategoriesList";
+import CategoryQuizzes from "./pages/CategoryQuizzes";
 import "./App.css";
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
           <Route path="/quizzes" element={<QuizzesList />} />
           <Route path="/quizzes/:id" element={<QuizDetails />} />
           <Route path="/categories" element={<CategoriesList />} />
+          <Route path="/categories/:categoryId/quizzes" element={<CategoryQuizzes />} />
         </Routes>
       </main>
     </div>
