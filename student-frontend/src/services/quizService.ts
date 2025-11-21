@@ -15,6 +15,13 @@ export interface Question {
   id: number;
   text: string;
   difficulty: string;
+  answerOptions?: AnswerOption[];
+}
+
+export interface AnswerOption {
+  id: number;
+  text: string;
+  isCorrect: boolean;
 }
 
 function handleJsonResponse<T>(response: Response): Promise<T> {

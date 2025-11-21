@@ -61,9 +61,9 @@ public class AnswerOptionController {
         return "redirect:/quizzes/" + quizId + "/questions/" + questionId + "/options";
     }
 
-    @PostMapping("/{id}/delete")
-    public String deleteOption(@PathVariable Long quizId, @PathVariable Long questionId, @PathVariable Long id) {
-        answerOptionService.deleteAnswerOption(id);
+    @PostMapping("/{answerOptionId}/delete")
+    public String deleteOption(@PathVariable("quizId") Long quizId, @PathVariable("questionId") Long questionId, @PathVariable("answerOptionId") Long answerOptionId) {
+        answerOptionService.deleteAnswerOption(answerOptionId);
         return "redirect:/quizzes/" + quizId + "/questions/" + questionId + "/options";
     }
 }

@@ -23,16 +23,16 @@ public class QuestionService {
         return questionRepository.findByQuizId(quizId);
     }
 
-    public Optional<Question> getQuestionById(Long id) {
-        return questionRepository.findById(id);
+    public Optional<Question> getQuestionById(Long questionId) {
+        return questionRepository.findById(questionId);
     }
 
     public Question addQuestion(Question question) {
         return questionRepository.save(question);
     }
 
-    public void deleteQuestion(Long id) {
-        questionRepository.deleteById(id);
+    public void deleteQuestion(Long questionId) {
+        questionRepository.deleteById(questionId);
     }
 
     public Question createQuestion(String text, String difficulty, Long quizId) {

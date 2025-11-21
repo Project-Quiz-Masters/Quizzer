@@ -5,9 +5,9 @@
     <title>Edit Quiz</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
-<body class="p-4">
+<body>
     <div th:insert="~{fragments/header :: siteHeader}"></div>
-    <div class="container">
+    <div class="container mt-4">
         <!-- Debug info -->
         <div th:if="${quiz == null}" class="alert alert-danger">
             ERROR: Quiz object is null!
@@ -16,7 +16,7 @@
         <div th:if="${quiz != null}">
             <h1>Edit "<span th:text="${quiz.title}">Quiz Name</span>"</h1>
 
-            <form th:action="@{/quizzes/{id}/edit(id=${quiz.id})}" method="post">
+            <form th:action="@{/quizzes/{quizId}/edit(quizId=${quiz.id})}" method="post">
             <!-- Error message display -->
             <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
             
@@ -36,6 +36,17 @@
                 <label for="course" class="form-label">Course</label>
                 <input type="text" class="form-control" id="course" name="course" 
                        th:value="${quiz.course}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="categoryId" class="form-label">Category</label>
+                <select class="form-select" id="categoryId" name="categoryId">
+                    <option value="" th:text="'-- None --'" th:if="${quiz.category} == null" selected>-- None --</option>
+                    <option th:each="cat : ${categories}"
+                            th:value="${cat.id}"
+                            th:text="${cat.name}"
+                            th:selected="${quiz.category != null} ? ${cat.id} == ${quiz.category.id} : false"></option>
+                </select>
             </div>
 
             <div class="mb-3 form-check">

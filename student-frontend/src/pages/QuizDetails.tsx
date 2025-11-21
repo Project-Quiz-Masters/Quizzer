@@ -5,6 +5,7 @@ import {
   getQuestionsByQuizId,
   type Quiz,
   type Question,
+  type AnswerOption,
 } from "../services/quizService";
 
 function formatDate(dateStr: string): string {
@@ -12,6 +13,12 @@ function formatDate(dateStr: string): string {
   const d = new Date(dateStr);
   if (Number.isNaN(d.getTime())) return dateStr;
   return d.toLocaleDateString("fi-FI");
+}
+
+interface UserAnswer {
+  questionId: number;
+  selectedOptionId: number | null;
+  isCorrect: boolean | null;
 }
 
 export default function QuizDetails() {
@@ -22,6 +29,9 @@ export default function QuizDetails() {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([]);
+  const [submitted, setSubmitted] = useState(false);
+  const [feedback, setFeedback] = useState<string | null>(null);
 
   useEffect(() => {
     if (!quizId) {
@@ -42,6 +52,15 @@ export default function QuizDetails() {
 
         setQuiz(quizData);
         setQuestions(questionData);
+        
+        // Initialize userAnswers
+        setUserAnswers(
+          questionData.map((q) => ({
+            questionId: q.id,
+            selectedOptionId: null,
+            isCorrect: null,
+          }))
+        );
       } catch (err: any) {
         setError(err.message || "Failed to load quiz details");
       } finally {
@@ -51,6 +70,27 @@ export default function QuizDetails() {
 
     loadData();
   }, [quizId]);
+
+  const handleAnswerSelect = (questionId: number, optionId: number, isCorrect: boolean) => {
+    setUserAnswers((prev) =>
+      prev.map((answer) =>
+        answer.questionId === questionId
+          ? { ...answer, selectedOptionId: optionId, isCorrect }
+          : answer
+      )
+    );
+  };
+
+  const handleSubmitQuiz = () => {
+    const correctCount = userAnswers.filter((a) => a.isCorrect === true).length;
+    const totalQuestions = questions.length;
+    const percentage = (correctCount / totalQuestions) * 100;
+
+    setSubmitted(true);
+    setFeedback(
+      `Quiz submitted! You scored ${correctCount} out of ${totalQuestions} (${percentage.toFixed(1)}%)`
+    );
+  };
 
   if (loading) {
     return (
@@ -98,6 +138,12 @@ export default function QuizDetails() {
         Course: {quiz.courseCode} · Category: {quiz.categoryName}
       </p>
 
+      {feedback && (
+        <div className={`feedback ${submitted ? "success" : "error"}`}>
+          <p>{feedback}</p>
+        </div>
+      )}
+
       <div className="questions-list">
         {questions.map((question, index) => (
           <div key={question.id} className="question-card">
@@ -106,6 +152,62 @@ export default function QuizDetails() {
               Question {index + 1} of {questionCount} · Difficulty:{" "}
               {question.difficulty}
             </p>
+
+            {question.answerOptions && question.answerOptions.length > 0 && (
+              <div className="answer-options">
+                {question.answerOptions.map((option: AnswerOption) => {
+                  const userAnswer = userAnswers.find(
+                    (a) => a.questionId === question.id
+                  );
+                  const isSelected = userAnswer?.selectedOptionId === option.id;
+                  const answerSubmitted =
+                    submitted && userAnswer?.selectedOptionId === option.id;
+                  const isCorrectAnswer =
+                    submitted && option.isCorrect && !isSelected;
+
+                  return (
+                    <div
+                      key={option.id}
+                      className={`answer-option ${
+                        isSelected ? "selected" : ""
+                      } ${
+                        answerSubmitted && userAnswer?.isCorrect
+                          ? "correct"
+                          : ""
+                      } ${
+                        answerSubmitted && !userAnswer?.isCorrect ? "incorrect" : ""
+                      } ${isCorrectAnswer ? "correct-answer" : ""}`}
+                      onClick={() => {
+                        if (!submitted) {
+                          handleAnswerSelect(
+                            question.id,
+                            option.id,
+                            option.isCorrect
+                          );
+                        }
+                      }}
+                    >
+                      <input
+                        type="radio"
+                        name={`question-${question.id}`}
+                        checked={isSelected}
+                        onChange={() => {
+                          if (!submitted) {
+                            handleAnswerSelect(
+                              question.id,
+                              option.id,
+                              option.isCorrect
+                            );
+                          }
+                        }}
+                        disabled={submitted}
+                      />
+                      <label>{option.text}</label>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         ))}
 
@@ -113,6 +215,22 @@ export default function QuizDetails() {
           <p>No questions found for this quiz.</p>
         )}
       </div>
+
+      {!submitted && questions.length > 0 && (
+        <div className="submit-section">
+          <button className="submit-button" onClick={handleSubmitQuiz}>
+            Submit Quiz
+          </button>
+        </div>
+      )}
+
+      {submitted && (
+        <div className="submit-section">
+          <Link to="/quizzes" className="back-button">
+            Back to Quizzes
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
