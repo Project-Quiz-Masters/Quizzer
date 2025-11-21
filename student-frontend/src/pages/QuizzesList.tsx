@@ -69,12 +69,12 @@ export default function QuizzesList() {
                                 <tr key={quiz.id}>
                                     <td>
                                         <Link to={`/quizzes/${quiz.id}`} className="quiz-link">
-                                            {quiz.name}
+                                            {quiz.title}
                                         </Link>
                                     </td>
                                     <td>{quiz.description}</td>
-                                    <td>{quiz.courseCode}</td>
-                                    <td>{quiz.categoryName || "-"}</td>
+                                    <td>{quiz.course}</td>
+                                    <td>{(quiz as any).categoryName || "-"}</td>
                                     <td>{formatDate(quiz.createdAt)}</td>
                                 </tr>
                             ))}

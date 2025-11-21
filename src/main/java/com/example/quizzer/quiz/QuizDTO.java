@@ -2,21 +2,21 @@ package com.example.quizzer.quiz;
 
 public class QuizDTO {
     private Long id;
-    private String name;
+    private String title;
     private String description;
-    private String courseCode;
+    private String course;
     private String categoryName;
     private String createdAt;
     private boolean published;
 
     public QuizDTO() {}
 
-    public QuizDTO(Long id, String name, String description, String courseCode, 
+    public QuizDTO(Long id, String title, String description, String course, 
                    String categoryName, String createdAt, boolean published) {
         this.id = id;
-        this.name = name;
+        this.title = title;
         this.description = description;
-        this.courseCode = courseCode;
+        this.course = course;
         this.categoryName = categoryName;
         this.createdAt = createdAt;
         this.published = published;
@@ -28,12 +28,17 @@ public class QuizDTO {
             ? quiz.getCreatedAt().toString()
             : "";
         
+        String categoryName = "-";
+        if (quiz.getCategory() != null && quiz.getCategory().getName() != null) {
+            categoryName = quiz.getCategory().getName();
+        }
+
         return new QuizDTO(
             quiz.getId(),
             quiz.getTitle(),
             quiz.getDescription(),
             quiz.getCourse(),
-            "-", // categoryName - placeholder
+            categoryName,
             formattedDate,
             quiz.isPublished()
         );
@@ -48,12 +53,12 @@ public class QuizDTO {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDescription() {
@@ -64,12 +69,12 @@ public class QuizDTO {
         this.description = description;
     }
 
-    public String getCourseCode() {
-        return courseCode;
+    public String getCourse() {
+        return course;
     }
 
-    public void setCourseCode(String courseCode) {
-        this.courseCode = courseCode;
+    public void setCourse(String course) {
+        this.course = course;
     }
 
     public String getCategoryName() {

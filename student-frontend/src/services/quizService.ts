@@ -2,13 +2,18 @@ const BACKEND_URL = "http://localhost:8080";
 
 export interface Quiz {
   id: number;
-  name: string;
+  title: string;
   description: string;
-  courseCode: string;   // adjust if your backend uses different name
-  categoryName: string; // adjust if needed
-  createdAt: string;    // date string
+  course: string;
+  createdAt: string;
   published: boolean;
-  questionCount?: number;
+  teacherId: number;
+  category?: {
+    id: number;
+    name: string;
+  };
+  // Category name provided by DTO endpoints
+  categoryName?: string;
 }
 
 export interface Question {

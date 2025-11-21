@@ -1,14 +1,25 @@
 package com.example.quizzer.quiz;
 
-import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import java.util.List;
 import java.util.Optional;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api")
@@ -28,8 +39,11 @@ public class QuizRestController {
       @ApiResponse(responseCode = "200", description = "Quizzes retrieved successfully")
   })
   @GetMapping("/quizzes")
-  public List<Quiz> getPublishedQuizzes() {
-    return quizRepository.findByPublishedTrue();
+  public List<QuizDTO> getPublishedQuizzes() {
+    return quizRepository.findByPublishedTrue()
+        .stream()
+        .map(QuizDTO::from)
+        .collect(Collectors.toList());
   }
 
   // POST /api/quizzes - create a new quiz via REST
@@ -55,9 +69,9 @@ public class QuizRestController {
       @ApiResponse(responseCode = "404", description = "Quiz not found")
   })
   @GetMapping("/quizzes/{quizId}")
-  public ResponseEntity<Quiz> getQuizById(@PathVariable Long quizId) {
+  public ResponseEntity<QuizDTO> getQuizById(@PathVariable Long quizId) {
     Optional<Quiz> quiz = quizService.getQuizById(quizId);
-    return quiz.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    return quiz.map(q -> ResponseEntity.ok(QuizDTO.from(q))).orElseGet(() -> ResponseEntity.notFound().build());
   }
 
   // PUT /api/quizzes/{quizId} - update quiz

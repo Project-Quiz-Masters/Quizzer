@@ -130,12 +130,12 @@ export default function QuizDetails() {
         ← Back to quizzes
       </Link>
 
-      <h1 className="page-title">{quiz.name}</h1>
+      <h1 className="page-title">{quiz.title}</h1>
       <p className="quiz-description">{quiz.description}</p>
 
       <p className="quiz-meta">
         Added on: {formatDate(quiz.createdAt)} · Questions: {questionCount} ·
-        Course: {quiz.courseCode} · Category: {quiz.categoryName}
+        Course: {quiz.course} · Category: {(quiz as any).categoryName || "-"}
       </p>
 
       {feedback && (

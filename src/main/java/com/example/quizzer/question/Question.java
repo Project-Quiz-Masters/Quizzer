@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.example.quizzer.answeroption.AnswerOption;
 import com.example.quizzer.quiz.Quiz;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
@@ -27,6 +28,7 @@ public class Question {
 
     private String difficulty = "Normal";
 
+    @JsonBackReference
     @ManyToOne(optional = false)
     @JoinColumn(name = "quiz_id")
     private Quiz quiz;
