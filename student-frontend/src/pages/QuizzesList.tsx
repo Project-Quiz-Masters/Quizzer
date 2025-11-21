@@ -22,8 +22,7 @@ export default function QuizzesList() {
                 console.log("Fetching quizzes from API...");
                 const data = await getAllPublishedQuizzes();
                 console.log("Received data:", data);
-                const published = data.filter((q) => q.published);
-                setQuizzes(published);
+                setQuizzes(data);
             } catch (err: any) {
                 console.error("Error loading quizzes:", err);
                 setError(err.message || "Failed to load quizzes. Is the backend running?");

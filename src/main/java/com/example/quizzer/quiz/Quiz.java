@@ -20,9 +20,13 @@ public class Quiz {
     private Long id;
 
     private String title;
+    
     private String description;
+    
     private String course;
+    
     private boolean published;
+    
     private LocalDateTime createdAt;
     private Long teacherId; // Changed from String to Long
     

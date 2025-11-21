@@ -101,7 +101,7 @@ export default function QuizDetails() {
       <div className="questions-list">
         {questions.map((question, index) => (
           <div key={question.id} className="question-card">
-            <h3>{question.text}</h3>
+            <p className="question-text">{question.text}</p>
             <p className="question-meta">
               Question {index + 1} of {questionCount} · Difficulty:{" "}
               {question.difficulty}

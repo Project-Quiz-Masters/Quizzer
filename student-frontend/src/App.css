@@ -51,7 +51,7 @@
 .page-title {
   margin-bottom: 1rem;
   font-size: 2rem;
-  color: #333;
+  color: #000;
 }
 
 .card {
@@ -71,12 +71,12 @@
   padding: 0.75rem;
   border-bottom: 1px solid #e0e0e0;
   text-align: left;
-  color: #333;
+  color: #000;
 }
 
 .quiz-table th {
   font-weight: 600;
-  color: #555;
+  color: #000;
   background-color: #fafafa;
 }
 
@@ -124,7 +124,14 @@
 
 .quiz-description {
   margin-bottom: 1rem;
-  color: #666;
+  color: #000;
+  line-height: 1.5;
+}
+
+.quiz-meta {
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  color: #000;
   line-height: 1.5;
 }
 
@@ -137,7 +144,7 @@
   border-bottom: 1px solid #e0e0e0;
   margin-bottom: 2rem;
   font-size: 0.875rem;
-  color: #666;
+  color: #000;
 }
 
 .questions-section {
@@ -161,7 +168,7 @@
   align-items: center;
   margin-bottom: 1rem;
   font-size: 0.875rem;
-  color: #666;
+  color: #000;
 }
 
 
@@ -176,10 +183,17 @@
 
 
 .question-text {
-  font-size: 1rem;
-  color: #333;
+  font-size: 1.25rem;
+  color: #000;
   line-height: 1.6;
   margin: 0;
+  margin-bottom: 0.5rem;
+}
+
+.question-meta {
+  font-size: 0.875rem;
+  color: #000;
+  margin-top: 0.5rem;
 }
 
 
