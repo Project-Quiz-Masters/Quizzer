@@ -32,7 +32,8 @@ export interface AnswerOption {
 function handleJsonResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
     return response.json().then((err) => {
-      const message = err?.message || `Request failed with status ${response.status}`;
+      const message =
+        err?.message || `Request failed with status ${response.status}`;
       throw new Error(message);
     });
   }
@@ -57,4 +58,38 @@ export async function getQuizById(id: number): Promise<Quiz> {
 export async function getQuestionsByQuizId(id: number): Promise<Question[]> {
   const res = await fetch(`${BACKEND_URL}/api/quizzes/${id}/questions`);
   return handleJsonResponse<Question[]>(res);
+}
+// 👉 Submit quiz answers
+export interface SubmitQuizAnswer {
+  questionId: number;
+  answerOptionId: number | null;
+}
+
+export interface SubmitQuizRequest {
+  quizId: number;
+  answers: SubmitQuizAnswer[];
+}
+
+export interface SubmitQuizResponse {
+  quizId: number;
+  correctCount: number;
+  totalQuestions: number;
+  // you can add more fields if backend sends them
+}
+
+export async function submitQuizAnswers(
+  payload: SubmitQuizRequest
+): Promise<SubmitQuizResponse> {
+  const res = await fetch(`${BACKEND_URL}/api/studentanswers/submit`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    const txt = await res.text().catch(() => "");
+    throw new Error(txt || "Failed to submit quiz");
+  }
+
+  return res.json();
 }
