@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   getQuizById,
   getQuestionsByQuizId,
@@ -36,6 +36,7 @@ export default function QuizDetails() {
   const [submitting, setSubmitting] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
 
+  // Load quiz + questions
   useEffect(() => {
     if (!quizId) {
       setError("Invalid quiz id");
@@ -56,6 +57,7 @@ export default function QuizDetails() {
         setQuiz(quizData);
         setQuestions(questionData);
 
+        // Initialize answer states
         setUserAnswers(
           questionData.map((q) => ({
             questionId: q.id,
@@ -73,6 +75,7 @@ export default function QuizDetails() {
     loadData();
   }, [quizId]);
 
+  // Select an answer
   const handleAnswerSelect = (
     questionId: number,
     optionId: number,
@@ -87,6 +90,7 @@ export default function QuizDetails() {
     );
   };
 
+  // Submit quiz
   const handleSubmitQuiz = async () => {
     const totalQuestions = questions.length;
     const correctCount = userAnswers.filter((a) => a.isCorrect === true).length;
@@ -110,16 +114,13 @@ export default function QuizDetails() {
       setFeedback(
         `Quiz submitted! You scored ${correctCount} out of ${totalQuestions} (${percentage.toFixed(
           1
-        )}%). Your answers were saved.`
+        )}%).`
       );
     } catch (err: any) {
-      console.error("Submitting quiz answers failed:", err);
       setFeedback(
         `Quiz submitted locally! You scored ${correctCount} out of ${totalQuestions} (${percentage.toFixed(
           1
-        )}%). However, saving results to the server failed: ${
-          err.message || "Unknown error"
-        }`
+        )}%). Saving to server failed: ${err.message || "Unknown error"}`
       );
     } finally {
       setSubmitted(true);
@@ -127,6 +128,7 @@ export default function QuizDetails() {
     }
   };
 
+  // Loading UI
   if (loading) {
     return (
       <div className="page-container">
@@ -135,13 +137,28 @@ export default function QuizDetails() {
     );
   }
 
+  // Error UI
   if (error) {
     return (
       <div className="page-container">
         <p className="error-text">{error}</p>
-        <Link to="/quizzes" className="back-link">
-          ← Back to quizzes
-        </Link>
+
+        {/* Styled back button (Task 113) */}
+        <button
+          onClick={() => window.history.back()}
+          style={{
+            padding: "8px 14px",
+            borderRadius: "6px",
+            border: "1px solid #1976d2",
+            background: "white",
+            color: "#1976d2",
+            cursor: "pointer",
+            fontWeight: 500,
+            marginTop: "1rem",
+          }}
+        >
+          ← Back to Quizzes
+        </button>
       </div>
     );
   }
@@ -150,9 +167,23 @@ export default function QuizDetails() {
     return (
       <div className="page-container">
         <p>Quiz not found.</p>
-        <Link to="/quizzes" className="back-link">
-          ← Back to quizzes
-        </Link>
+
+        {/* Styled back button (Task 113) */}
+        <button
+          onClick={() => window.history.back()}
+          style={{
+            padding: "8px 14px",
+            borderRadius: "6px",
+            border: "1px solid #1976d2",
+            background: "white",
+            color: "#1976d2",
+            cursor: "pointer",
+            fontWeight: 500,
+            marginTop: "1rem",
+          }}
+        >
+          ← Back to Quizzes
+        </button>
       </div>
     );
   }
@@ -161,10 +192,22 @@ export default function QuizDetails() {
 
   return (
     <div className="page-container">
-      {/* Task 113: Back button */}
-      <Link to="/quizzes" className="back-link">
-        ← Back to quizzes
-      </Link>
+      {/* 🔵 Task 113 — Styled Back Button */}
+      <button
+        onClick={() => window.history.back()}
+        style={{
+          padding: "8px 14px",
+          borderRadius: "6px",
+          border: "1px solid #1976d2",
+          background: "white",
+          color: "#1976d2",
+          cursor: "pointer",
+          fontWeight: 500,
+          marginBottom: "1rem",
+        }}
+      >
+        ← Back to Quizzes
+      </button>
 
       <h1 className="page-title">{quiz.title}</h1>
       <p className="quiz-description">{quiz.description}</p>
@@ -174,12 +217,14 @@ export default function QuizDetails() {
         Course: {quiz.course} · Category: {(quiz as any).categoryName || "-"}
       </p>
 
+      {/* Quiz result feedback */}
       {feedback && (
         <div className={`feedback ${submitted ? "success" : "error"}`}>
           <p>{feedback}</p>
         </div>
       )}
 
+      {/* Questions */}
       <div className="questions-list">
         {questions.map((question, index) => {
           const userAnswer = userAnswers.find(
@@ -195,7 +240,7 @@ export default function QuizDetails() {
                 {question.difficulty}
               </p>
 
-              {/* Task 117: per-question Correct/Wrong marker */}
+              {/* 🔵 Task 117 — per-question Correct/Wrong */}
               {submitted && (
                 <p
                   className={`question-result ${
@@ -206,14 +251,17 @@ export default function QuizDetails() {
                 </p>
               )}
 
-              {question.answerOptions && question.answerOptions.length > 0 && (
+              {/* Answer options */}
+              {question.answerOptions?.length > 0 && (
                 <div className="answer-options">
                   {question.answerOptions.map((option: AnswerOption) => {
                     const isSelected =
                       userAnswer?.selectedOptionId === option.id;
-                    const answerSubmitted =
+
+                    const wasSelectedAfterSubmit =
                       submitted && userAnswer?.selectedOptionId === option.id;
-                    const isCorrectAnswer =
+
+                    const correctButNotSelected =
                       submitted && option.isCorrect && !isSelected;
 
                     return (
@@ -222,37 +270,30 @@ export default function QuizDetails() {
                         className={`answer-option ${
                           isSelected ? "selected" : ""
                         } ${
-                          answerSubmitted && userAnswer?.isCorrect
+                          submitted && isSelected && userAnswer?.isCorrect
                             ? "correct"
                             : ""
                         } ${
-                          answerSubmitted && !userAnswer?.isCorrect
+                          submitted && isSelected && !userAnswer?.isCorrect
                             ? "incorrect"
                             : ""
-                        } ${isCorrectAnswer ? "correct-answer" : ""}`}
-                        onClick={() => {
-                          if (!submitted) {
-                            handleAnswerSelect(
-                              question.id,
-                              option.id,
-                              option.isCorrect
-                            );
-                          }
-                        }}
+                        } ${
+                          submitted && option.isCorrect && !isSelected
+                            ? "correct-answer"
+                            : ""
+                        }`}
                       >
                         <input
                           type="radio"
                           name={`question-${question.id}`}
                           checked={isSelected}
-                          onChange={() => {
-                            if (!submitted) {
-                              handleAnswerSelect(
-                                question.id,
-                                option.id,
-                                option.isCorrect
-                              );
-                            }
-                          }}
+                          onChange={() =>
+                            handleAnswerSelect(
+                              question.id,
+                              option.id,
+                              option.isCorrect
+                            )
+                          }
                           disabled={submitted}
                         />
                         <label>{option.text}</label>
@@ -268,6 +309,7 @@ export default function QuizDetails() {
         {questions.length === 0 && <p>No questions found for this quiz.</p>}
       </div>
 
+      {/* Submit button */}
       {!submitted && questions.length > 0 && (
         <div className="submit-section">
           <button
@@ -280,11 +322,12 @@ export default function QuizDetails() {
         </div>
       )}
 
+      {/* Back button after submitting */}
       {submitted && (
         <div className="submit-section">
-          <Link to="/quizzes" className="back-button">
+          <button onClick={() => window.history.back()} className="back-button">
             Back to Quizzes
-          </Link>
+          </button>
         </div>
       )}
     </div>
