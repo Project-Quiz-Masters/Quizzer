@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.quizzer.dto.QuestionResultDTO;
+import com.example.quizzer.dto.QuizSubmissionDTO;
+import com.example.quizzer.dto.QuizSubmissionResultDTO;
 import com.example.quizzer.dto.StudentAnswerDTO;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -67,5 +69,20 @@ public class StudentAnswerRestController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
+    @PostMapping("/submit")
+    public ResponseEntity<QuizSubmissionResultDTO> submitQuiz(
+        @RequestBody QuizSubmissionDTO dto) {
+
+    try {
+        QuizSubmissionResultDTO result = studentAnswerService.submitQuiz(dto);
+        return ResponseEntity.ok(result);
+    } catch (ResponseStatusException ex) {
+        return ResponseEntity.status(ex.getStatusCode()).body(null);
+    } catch (Exception ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    }
+}
+
 
 }
