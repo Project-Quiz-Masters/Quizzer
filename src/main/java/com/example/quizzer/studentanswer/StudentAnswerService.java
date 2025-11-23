@@ -4,6 +4,8 @@ import com.example.quizzer.answeroption.AnswerOption;
 import com.example.quizzer.answeroption.AnswerOptionRepository;
 import com.example.quizzer.question.Question;
 import com.example.quizzer.dto.QuestionResultDTO;
+import com.example.quizzer.dto.QuizSubmissionDTO;
+import com.example.quizzer.dto.QuizSubmissionResultDTO;
 import com.example.quizzer.quiz.Quiz;
 import com.example.quizzer.quiz.QuizRepository;
 import org.springframework.stereotype.Service;
@@ -80,4 +82,35 @@ public class StudentAnswerService {
 
         return results;
     }
+
+    @Transactional
+    public QuizSubmissionResultDTO submitQuiz(QuizSubmissionDTO dto) {
+
+    int correctCount = 0;
+
+    for (QuizSubmissionDTO.AnswerSubmission a : dto.getAnswers()) {
+
+        AnswerOption option = answerOptionRepository.findById(a.getAnswerOptionId())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Answer option not found"));
+
+        // Save the student answer (anonymous)
+        StudentAnswer sa = new StudentAnswer();
+        sa.setAnswer(option);
+        studentAnswerRepository.save(sa);
+
+        // Count correct answers
+        if (option.isCorrect()) {
+            correctCount++;
+        }
+    }
+
+    QuizSubmissionResultDTO result = new QuizSubmissionResultDTO();
+    result.setQuizId(dto.getQuizId());
+    result.setCorrectCount(correctCount);
+    result.setTotalQuestions(dto.getAnswers().size());
+
+    return result;
+}
+
 }
