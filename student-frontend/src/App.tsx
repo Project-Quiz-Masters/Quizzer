@@ -3,6 +3,8 @@ import QuizzesList from "./pages/QuizzesList";
 import QuizDetails from "./pages/QuizDetails.tsx";
 import CategoriesList from "./pages/CategoriesList";
 import CategoryQuizzes from "./pages/CategoryQuizzes";
+import QuizResults from "./pages/QuizResults";
+
 import "./App.css";
 
 function App() {
@@ -28,6 +30,7 @@ function App() {
           <Route path="/" element={<Navigate to="/quizzes" />} />
           <Route path="/quizzes" element={<QuizzesList />} />
           <Route path="/quizzes/:id" element={<QuizDetails />} />
+          <Route path="/quizzes/:id/results" element={<QuizResults />} />
           <Route path="/categories" element={<CategoriesList />} />
           <Route path="/categories/:categoryId/quizzes" element={<CategoryQuizzes />} />
         </Routes>

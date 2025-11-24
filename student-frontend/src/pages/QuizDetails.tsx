@@ -240,7 +240,7 @@ export default function QuizDetails() {
                             ? "incorrect"
                             : ""
                         } ${
-                          submitted && option.isCorrect && !isSelected
+                          submitted && option.correct && !isSelected
                             ? "correct-answer"
                             : ""
                         }`}
@@ -253,7 +253,7 @@ export default function QuizDetails() {
                             handleAnswerSelect(
                               question.id,
                               option.id,
-                              option.isCorrect
+                              option.correct
                             )
                           }
                           disabled={submitted}

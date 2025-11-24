@@ -20,13 +20,13 @@ export interface Question {
   id: number;
   text: string;
   difficulty: string;
-  answerOptions?: AnswerOption[];
+  answerOptions: AnswerOption[];
 }
 
 export interface AnswerOption {
   id: number;
   text: string;
-  isCorrect: boolean;
+  correct: boolean;
 }
 
 function handleJsonResponse<T>(response: Response): Promise<T> {
@@ -80,11 +80,12 @@ export interface SubmitQuizResponse {
 export async function submitQuizAnswers(
   payload: SubmitQuizRequest
 ): Promise<SubmitQuizResponse> {
-  const res = await fetch(`${BACKEND_URL}/api/studentanswers/submit`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
+  const res = await fetch(`${BACKEND_URL}/api/student-answers/submit`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(payload),
+});
+
 
   if (!res.ok) {
     const txt = await res.text().catch(() => "");
