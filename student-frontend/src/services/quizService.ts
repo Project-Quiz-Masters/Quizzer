@@ -1,19 +1,11 @@
-const BACKEND_URL = "http://localhost:8080";
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
 
-export interface Quiz {
+console.log('API_BASE_URL:', API_BASE_URL); // Add this for debugging
+
+export interface AnswerOption {
   id: number;
-  title: string;
-  description: string;
-  course: string;
-  createdAt: string;
-  published: boolean;
-  teacherId: number;
-  category?: {
-    id: number;
-    name: string;
-  };
-  // Category name provided by DTO endpoints
-  categoryName?: string;
+  text: string;
+  correct: boolean;
 }
 
 export interface Question {
@@ -23,38 +15,29 @@ export interface Question {
   answerOptions?: AnswerOption[];
 }
 
-export interface AnswerOption {
+export interface Quiz {
   id: number;
-  text: string;
-  isCorrect: boolean;
+  name: string;
+  description: string;
+  courseCode: string;
+  categoryName: string | null;
+  createdAt: string;
+  published: boolean;
+  questions?: Question[];
 }
 
-function handleJsonResponse<T>(response: Response): Promise<T> {
+export async function getAllPublishedQuizzes(): Promise<Quiz[]> {
+  const response = await fetch(`${API_BASE_URL}/api/quizzes`);
   if (!response.ok) {
-    return response.json().then((err) => {
-      const message = err?.message || `Request failed with status ${response.status}`;
-      throw new Error(message);
-    });
+    throw new Error("Failed to fetch quizzes");
   }
   return response.json();
 }
 
-// 👉 Get all published quizzes
-export async function getAllPublishedQuizzes(): Promise<Quiz[]> {
-  const res = await fetch(`${BACKEND_URL}/api/quizzes`);
-  return handleJsonResponse<Quiz[]>(res);
-  // If you have /api/quizzes/published, use that instead:
-  // const res = await fetch(`${BACKEND_URL}/api/quizzes/published`);
-}
-
-// 👉 Get single quiz by id
 export async function getQuizById(id: number): Promise<Quiz> {
-  const res = await fetch(`${BACKEND_URL}/api/quizzes/${id}`);
-  return handleJsonResponse<Quiz>(res);
-}
-
-// 👉 Get questions of a quiz
-export async function getQuestionsByQuizId(id: number): Promise<Question[]> {
-  const res = await fetch(`${BACKEND_URL}/api/quizzes/${id}/questions`);
-  return handleJsonResponse<Question[]>(res);
+  const response = await fetch(`${API_BASE_URL}/api/quizzes/${id}`);
+  if (!response.ok) {
+    throw new Error("Quiz not found");
+  }
+  return response.json();
 }
