@@ -58,6 +58,7 @@ To run the backend application from the command line:
     http://localhost:8080/h2-console
 
 **### RAHTI PRODUCTION ENVIRONMENT URL**: https://rahti-quizzer-quizzer-postgres.2.rahtiapp.fi/quizzes
+**### LINK TO TEH SWAGGER DOCUMENTATION DEPLOYED TO THE PRODUCTION ENVIRONMENT IN RAHTI**: link to the Swagger documentation deployed to the production environment in Rahti
 
 ### ***Flinga board link: https://edu.flinga.fi/s/EXCBP45***
     
