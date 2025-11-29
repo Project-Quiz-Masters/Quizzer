@@ -6,7 +6,6 @@ import {
   submitQuizAnswers,
   type Quiz,
   type Question,
-  type AnswerOption,
   type SubmitQuizRequest,
 } from "../services/quizService";
 
@@ -109,7 +108,6 @@ export default function QuizDetails() {
       : 0;
 
     setSubmitting(true);
-    let saveSuccess = false;
 
     const payload: SubmitQuizRequest = {
       quizId,
@@ -121,7 +119,6 @@ export default function QuizDetails() {
 
     try {
       await submitQuizAnswers(payload);
-      saveSuccess = true;
       setFeedback(
         `Quiz submitted! You scored ${correctCount} out of ${totalQuestions} (${percentage.toFixed(
           1
@@ -212,9 +209,8 @@ export default function QuizDetails() {
 
               {submitted && (
                 <p
-                  className={`question-result ${
-                    ua?.isCorrect ? "correct" : "incorrect"
-                  }`}
+                  className={`question-result ${ua?.isCorrect ? "correct" : "incorrect"
+                    }`}
                 >
                   {ua?.isCorrect ? "Correct" : "Wrong"}
                 </p>
@@ -229,21 +225,17 @@ export default function QuizDetails() {
                     return (
                       <div
                         key={option.id}
-                        className={`answer-option ${
-                          isSelected ? "selected" : ""
-                        } ${
-                          submitted && isSelected && ua?.isCorrect
+                        className={`answer-option ${isSelected ? "selected" : ""
+                          } ${submitted && isSelected && ua?.isCorrect
                             ? "correct"
                             : ""
-                        } ${
-                          submitted && isSelected && !ua?.isCorrect
+                          } ${submitted && isSelected && !ua?.isCorrect
                             ? "incorrect"
                             : ""
-                        } ${
-                          submitted && option.correct && !isSelected
+                          } ${submitted && option.correct && !isSelected
                             ? "correct-answer"
                             : ""
-                        }`}
+                          }`}
                       >
                         <input
                           type="radio"

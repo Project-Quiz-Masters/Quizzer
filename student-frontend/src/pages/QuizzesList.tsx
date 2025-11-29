@@ -78,10 +78,10 @@ export default function QuizzesList() {
                                     <td>{(quiz as any).categoryName || "-"}</td>
                                     <td>{formatDate(quiz.createdAt)}</td>
                                     <td>
-        <Link to={`/quizzes/${quiz.id}/results`} className="quiz-link">
-          View results
-        </Link>
-      </td>
+                                        <Link to={`/quizzes/${quiz.id}/results`} className="quiz-link">
+                                            View results
+                                        </Link>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>

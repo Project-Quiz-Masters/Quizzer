@@ -1,5 +1,3 @@
-const BACKEND_URL = "http://localhost:8080";
-
 export interface Quiz {
   id: number;
   title: string;
@@ -42,7 +40,7 @@ function handleJsonResponse<T>(response: Response): Promise<T> {
 
 // 👉 Get all published quizzes
 export async function getAllPublishedQuizzes(): Promise<Quiz[]> {
-  const res = await fetch(`${BACKEND_URL}/api/quizzes`);
+  const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/quizzes`);
   return handleJsonResponse<Quiz[]>(res);
   // If you have /api/quizzes/published, use that instead:
   // const res = await fetch(`${BACKEND_URL}/api/quizzes/published`);
@@ -50,13 +48,13 @@ export async function getAllPublishedQuizzes(): Promise<Quiz[]> {
 
 // 👉 Get single quiz by id
 export async function getQuizById(id: number): Promise<Quiz> {
-  const res = await fetch(`${BACKEND_URL}/api/quizzes/${id}`);
+  const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/quizzes/${id}`);
   return handleJsonResponse<Quiz>(res);
 }
 
 // 👉 Get questions of a quiz
 export async function getQuestionsByQuizId(id: number): Promise<Question[]> {
-  const res = await fetch(`${BACKEND_URL}/api/quizzes/${id}/questions`);
+  const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/quizzes/${id}/questions`);
   return handleJsonResponse<Question[]>(res);
 }
 // 👉 Submit quiz answers
@@ -80,11 +78,11 @@ export interface SubmitQuizResponse {
 export async function submitQuizAnswers(
   payload: SubmitQuizRequest
 ): Promise<SubmitQuizResponse> {
-  const res = await fetch(`${BACKEND_URL}/api/student-answers/submit`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(payload),
-});
+  const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/student-answers/submit`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
 
 
   if (!res.ok) {
