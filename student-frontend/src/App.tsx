@@ -10,7 +10,7 @@ import "./App.css";
 function App() {
   return (
     <div className="app-root">
-      
+
       <header className="app-header">
         <div className="app-header-inner">
           <span className="app-logo">Quizzer</span>
