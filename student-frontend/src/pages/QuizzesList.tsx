@@ -62,6 +62,7 @@ export default function QuizzesList() {
                                 <th>Course</th>
                                 <th>Category</th>
                                 <th>Added on</th>
+                                <th>Results</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -76,6 +77,11 @@ export default function QuizzesList() {
                                     <td>{quiz.course}</td>
                                     <td>{(quiz as any).categoryName || "-"}</td>
                                     <td>{formatDate(quiz.createdAt)}</td>
+                                    <td>
+        <Link to={`/quizzes/${quiz.id}/results`} className="quiz-link">
+          View results
+        </Link>
+      </td>
                                 </tr>
                             ))}
                         </tbody>
