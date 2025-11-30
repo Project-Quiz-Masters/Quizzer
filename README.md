@@ -5,6 +5,8 @@ Teachers can create and manage quizzes, questions, and categories through a teac
 Students can take published quizzes, get instant feedback, and write reviews in the student dashboard.  
 The goal of the project is to make learning more interactive and provide a practical software development experience for the team.
 
+**Frontend Production URL:** https://quizzer-778l.onrender.com/quizzes
+
 ---
 
 ## Team members
@@ -37,27 +39,20 @@ https://github.com/orgs/Project-Quiz-Masters/projects/5/views/1
 
 ---
 
-# Developer Guide
+## Developer Guide
 
-Instructions for setting up the backend and frontend environments.
+Below are the implementation technologies and setup instructions for local development.
 
----
+### Backend
 
-# Backend
+#### Technologies
 
-## Requirements
+- Programming language: Java 21  
+- Frameworks: Spring Boot (Maven project)  
+- Major libraries: Spring Web, Spring Data JPA, SpringDoc/OpenAPI (Swagger), H2  
+- Databases: H2 (development), PostgreSQL (production)
 
-- Java 21  
-- Spring Boot  
-- Maven  
-- H2 Database (development)  
-- PostgreSQL (production)
-
-Make sure you have Git, Java 21, and Maven installed.
-
----
-
-## Running the Backend
+#### Running the Backend
 
 1. Clone the repository:
 
@@ -102,52 +97,51 @@ http://localhost:8080/h2-console
 
 ---
 
-# Frontend
+### Frontend
 
-The frontend is located in the `student-frontend` folder.
+#### Technologies
 
-## Requirements
+- Programming language: TypeScript  
+- Frameworks: React (Vite)  
+- Major libraries: React Router, Fetch API/axios (service calls)
 
-- Node.js  
-- npm
+#### Running the Frontend
 
-## Running the Frontend
+The frontend source is in the `student-frontend` folder.
 
-1. Navigate:
+1. Navigate to the frontend folder:
 
    ```
    cd student-frontend
    ```
 
-2. Install dependencies:
+2. Install dependencies (first run or after dependency changes):
 
    ```
    npm install
    ```
 
-3. Start development server:
+3. Start the development server (runs on port 5173):
 
    ```
    npm run dev
    ```
 
-Frontend runs at:
+   Open: `http://localhost:5173`
 
-```
-http://localhost:5173
-```
-
-4. Build:
+4. Build production assets:
 
    ```
    npm run build
    ```
 
-5. Preview:
+5. Preview the production build locally:
 
    ```
    npm run preview
    ```
+
+Frontend production (Render): `https://quizzer-778l.onrender.com/quizzes`
 
 ---
 
