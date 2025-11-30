@@ -65,6 +65,9 @@ Make sure you have Git, Java 21, and Maven installed.
    git clone https://github.com/Project-Quiz-Masters/Quizzer.git
    ```
 
+**RAHTI Production URL**: https://rahti-quizzer-quizzer-postgres.2.rahtiapp.fi/quizzes
+**Swagger (Production)**: Available in the RAHTI environment (link provided by ops)
+
 2. Navigate to the project and pull the latest code:
 
    ```

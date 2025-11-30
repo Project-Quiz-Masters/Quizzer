@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.example.quizzer.question.Question;
+import com.example.quizzer.category.Category;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -20,15 +22,23 @@ public class Quiz {
     private Long id;
 
     private String title;
+    
     private String description;
+    
     private String course;
+    
     private boolean published;
+    
     private LocalDateTime createdAt;
     private Long teacherId; // Changed from String to Long
     
     // This cascade configuration ensures questions are deleted when quiz is deleted
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions;
+
+    @JsonBackReference
+    @jakarta.persistence.ManyToOne
+    private Category category;
     
     // Constructors
     public Quiz() {}
@@ -66,4 +76,7 @@ public class Quiz {
 
     public List<Question> getQuestions() { return questions; }
     public void setQuestions(List<Question> questions) { this.questions = questions; }
+
+    public Category getCategory() { return category; }
+    public void setCategory(Category category) { this.category = category; }
 }
