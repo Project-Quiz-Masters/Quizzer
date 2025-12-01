@@ -1,22 +1,34 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getQuizResults } from "../services/quizResults";
+import { getQuizResults, QuizResultsError } from "../services/quizResults";
 import type { QuestionResult } from "../services/quizResults";
 
 export default function QuizResults() {
   const { id } = useParams<{ id: string }>();
   const [results, setResults] = useState<QuestionResult[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!id) return;
 
+    setLoading(true);
+    setError(null);
     getQuizResults(Number(id))
       .then((data) => setResults(data))
+      .catch((e: unknown) => {
+        if (e instanceof QuizResultsError) {
+          if (e.status === 404) setError("Quiz not found or has been removed.");
+          else setError(e.message);
+        } else {
+          setError("Unexpected error loading results.");
+        }
+      })
       .finally(() => setLoading(false));
   }, [id]);
 
   if (loading) return <p>Loading...</p>;
+  if (error) return <p className="results-error">{error}</p>;
   if (!results.length) return <p>No answers yet for this quiz.</p>;
 
   const totalQuestions = results.length;
