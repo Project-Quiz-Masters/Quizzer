@@ -98,9 +98,10 @@ erDiagram
 
     CATEGORY ||--o{ QUIZ : contains
     QUIZ ||--o{ QUESTION : includes
-    QUESTION ||--o{ ANSWEROPTION
-    ANSWEROPTION ||--o{ STUDENTANSWER
+    QUESTION ||--o{ ANSWEROPTION : offers
+    ANSWEROPTION ||--o{ STUDENTANSWER : chosenBy
 ```
+
     
 
 
