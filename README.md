@@ -67,33 +67,38 @@ To run the backend application from the command line:
 ```mermaid
 erDiagram
     CATEGORY {
-        long ID
+        int ID
         string Title
         string Description
     }
+
     QUIZ {
-        long ID
+        int ID
         string Title
         string Description
         boolean Published
-        datetime CreatedAt
+        string CreatedAt
     }
+
     QUESTION {
-        long ID
+        int ID
         string Text
         string Difficulty
     }
+
     ANSWEROPTION {
-        long ID
+        int ID
         string Text
         boolean Correct
     }
+
     STUDENTANSWER {
-        long ID
+        int ID
     }
-    CATEGORY ||--o{ QUIZ: contains
-    QUIZ ||--o{ QUESTION: includes
-    QUESTION ||--o{ ANSWEROPTION 
+
+    CATEGORY ||--o{ QUIZ : contains
+    QUIZ ||--o{ QUESTION : includes
+    QUESTION ||--o{ ANSWEROPTION
     ANSWEROPTION ||--o{ STUDENTANSWER
 ```
     
