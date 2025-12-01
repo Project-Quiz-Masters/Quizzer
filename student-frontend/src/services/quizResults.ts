@@ -15,13 +15,10 @@ export class QuizResultsError extends Error {
   }
 }
 
-// Prefer environment variable, but default to Rahti backend for production demos
-const API_URL = (import.meta as any).env?.VITE_API_URL ?? "https://rahti-quizzer-quizzer-postgres.2.rahtiapp.fi";
-
 export async function getQuizResults(quizId: number): Promise<QuestionResult[]> {
   let res: Response;
   try {
-    res = await fetch(`${API_URL}/api/student-answers/quiz/${quizId}/results`);
+    res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/student-answers/quiz/${quizId}/results`);;
   } catch (e) {
     throw new QuizResultsError("Network error while fetching quiz results");
   }
@@ -45,7 +42,7 @@ export async function submitQuiz(
 ): Promise<{ quizId: number; correctCount: number; totalQuestions: number }> {
   let res: Response;
   try {
-    res = await fetch(`${API_URL}/api/student-answers/submit`, {
+    res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/student-answers/submit`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ quizId, answers }),
