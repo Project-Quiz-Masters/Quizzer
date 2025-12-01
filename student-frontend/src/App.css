@@ -216,6 +216,7 @@
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.3s ease;
+  color: #000;
 }
 
 .answer-option:hover:not(:disabled) {
@@ -430,7 +431,8 @@
   padding: 1.5rem 2rem 2rem;
   border-radius: 4px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
-  color: #000; /* ensure readable text color */
+  color: #000;
+  /* ensure readable text color */
 }
 
 .results-title {
