@@ -15,7 +15,8 @@ export class QuizResultsError extends Error {
   }
 }
 
-const API_URL = (import.meta as any).env?.VITE_API_URL ?? "http://localhost:8080";
+// Prefer environment variable, but default to Rahti backend for production demos
+const API_URL = (import.meta as any).env?.VITE_API_URL ?? "https://rahti-quizzer-quizzer-postgres.2.rahtiapp.fi";
 
 export async function getQuizResults(quizId: number): Promise<QuestionResult[]> {
   let res: Response;

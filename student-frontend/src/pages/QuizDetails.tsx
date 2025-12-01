@@ -3,11 +3,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import {
   getQuizById,
   getQuestionsByQuizId,
-  submitQuizAnswers,
   type Quiz,
   type Question,
-  type SubmitQuizRequest,
 } from "../services/quizService";
+import { submitQuiz } from "../services/quizResults";
 
 function formatDate(dateStr: string): string {
   if (!dateStr) return "";
@@ -83,8 +82,8 @@ export default function QuizDetails() {
   ) => {
     if (submitted) return;
 
-    setUserAnswers((prev) =>
-      prev.map((ua) =>
+    setUserAnswers((prev: UserAnswer[]) =>
+      prev.map((ua: UserAnswer) =>
         ua.questionId === questionId
           ? { ...ua, selectedOptionId: optionId, isCorrect }
           : ua
@@ -95,35 +94,38 @@ export default function QuizDetails() {
   // Submit quiz
   const handleSubmitQuiz = async () => {
     // Ensure all answered
-    const unanswered = userAnswers.filter((a) => a.selectedOptionId === null);
+    const unanswered = userAnswers.filter(
+      (a: UserAnswer) => a.selectedOptionId === null
+    );
     if (unanswered.length > 0) {
       alert("Please answer all questions before submitting.");
       return;
     }
 
     const totalQuestions = questions.length;
-    const correctCount = userAnswers.filter((a) => a.isCorrect === true).length;
+    const correctCount = userAnswers.filter(
+      (a: UserAnswer) => a.isCorrect === true
+    ).length;
     const percentage = totalQuestions
       ? (correctCount / totalQuestions) * 100
       : 0;
 
     setSubmitting(true);
 
-    const payload: SubmitQuizRequest = {
-      quizId,
-      answers: userAnswers.map((a) => ({
-        questionId: a.questionId,
-        answerOptionId: a.selectedOptionId,
-      })),
-    };
+    const answers = userAnswers.map((a: UserAnswer) => ({
+      questionId: a.questionId,
+      answerOptionId: a.selectedOptionId as number,
+    }));
 
     try {
-      await submitQuizAnswers(payload);
+      await submitQuiz(quizId, answers);
       setFeedback(
         `Quiz submitted! You scored ${correctCount} out of ${totalQuestions} (${percentage.toFixed(
           1
         )}%).`
       );
+      // Navigate to results for immediate view
+      navigate(`/quizzes/${quizId}/results`);
     } catch (err: any) {
       setFeedback(
         `Quiz submitted locally! You scored ${correctCount} out of ${totalQuestions} (${percentage.toFixed(
