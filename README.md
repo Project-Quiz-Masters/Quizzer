@@ -64,6 +64,7 @@ To run the backend application from the command line:
 
 **### ER Diagram**
 
+```mermaid
 erDiagram
     CATEGORY {
         long ID
@@ -93,9 +94,8 @@ erDiagram
     CATEGORY ||--o{ QUIZ: contains
     QUIZ ||--o{ QUESTION: includes
     QUESTION ||--o{ ANSWEROPTION 
-    ANSWEROPTION ||--o{ STUDENTANSWER 
-
-
+    ANSWEROPTION ||--o{ STUDENTANSWER
+```
     
 
 
