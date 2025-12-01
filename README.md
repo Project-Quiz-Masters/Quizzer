@@ -63,13 +63,13 @@ To run the backend application from the command line:
 ### ***Flinga board link: https://edu.flinga.fi/s/EXCBP45***
 
 **### ER Diagram**
+
 erDiagram
     CATEGORY {
         long ID
         string Title
         string Description
     }
-
     QUIZ {
         long ID
         string Title
@@ -77,23 +77,19 @@ erDiagram
         boolean Published
         datetime CreatedAt
     }
-
     QUESTION {
         long ID
         string Text
         string Difficulty
     }
-
     ANSWEROPTION {
         long ID
         string Text
         boolean Correct
     }
-
     STUDENTANSWER {
         long ID
     }
-
     CATEGORY ||--o{ QUIZ: contains
     QUIZ ||--o{ QUESTION: includes
     QUESTION ||--o{ ANSWEROPTION 
