@@ -1,4 +1,4 @@
-package java.com.example.quizzer.studentanswer;
+package com.example.quizzer.studentanswer;
 
 import com.example.quizzer.answeroption.AnswerOption;
 import com.example.quizzer.answeroption.AnswerOptionRepository;
@@ -6,11 +6,10 @@ import com.example.quizzer.question.Question;
 import com.example.quizzer.question.QuestionRepository;
 import com.example.quizzer.quiz.Quiz;
 import com.example.quizzer.quiz.QuizRepository;
-import com.example.quizzer.studentanswer.StudentAnswerRepository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class StudentAnswerRestControllerTest {
-    
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -51,6 +50,7 @@ public class StudentAnswerRestControllerTest {
     }
 
     // ---------------- Helpers ----------------
+
     private AnswerOption createPublishedQuizOption() {
         Quiz quiz = new Quiz();
         quiz.setTitle("Published Quiz");
@@ -85,5 +85,75 @@ public class StudentAnswerRestControllerTest {
         opt.setText("Option");
         opt.setCorrect(false);
         return answerOptionRepository.save(opt);
+    }
+
+    // ---------------- Required Tests (Exercise 12) ----------------
+
+    @Test
+    public void createAnswerSavesAnswerForPublishedQuiz() throws Exception {
+        AnswerOption option = createPublishedQuizOption();
+
+        String requestJson = """
+                { "answerOptionId": %d }
+                """.formatted(option.getId());
+
+        mockMvc.perform(post("/api/student-answers")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(status().isCreated());
+
+        assertThat(studentAnswerRepository.count()).isEqualTo(1);
+
+        StudentAnswer saved = studentAnswerRepository.findAll().get(0);
+        assertThat(saved.getAnswer().getId()).isEqualTo(option.getId());
+    }
+
+    @Test
+    public void createAnswerDoesNotSaveAnswerWithoutAnswerOption() throws Exception {
+
+        String requestJson = """
+                { "answerOptionId": null }
+                """;
+
+        mockMvc.perform(post("/api/student-answers")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(status().isBadRequest());
+
+        assertThat(studentAnswerRepository.count()).isZero();
+    }
+
+    @Test
+    public void createAnswerDoesNotSaveAnswerForNonExistingAnswerOption() throws Exception {
+
+        long invalidId = 9999L;
+
+        String requestJson = """
+                { "answerOptionId": %d }
+                """.formatted(invalidId);
+
+        mockMvc.perform(post("/api/student-answers")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(status().isNotFound());
+
+        assertThat(studentAnswerRepository.count()).isZero();
+    }
+
+    @Test
+    public void createAnswerDoesNotSaveAnswerForNonPublishedQuiz() throws Exception {
+
+        AnswerOption option = createUnpublishedQuizOption();
+
+        String requestJson = """
+                { "answerOptionId": %d }
+                """.formatted(option.getId());
+
+        mockMvc.perform(post("/api/student-answers")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(status().isBadRequest());
+
+        assertThat(studentAnswerRepository.count()).isZero();
     }
 }
