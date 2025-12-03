@@ -22,7 +22,7 @@ public class ReviewRestController {
         this.reviewService = reviewService;
     }
 
-    @PostMapping("/reviews/quiz/{quizId}")
+        @PostMapping("/quizzes/{quizId}/reviews")
     @Operation(summary = "Add a review", description = "Adds a new review to the specified quiz.")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Review created successfully"),
@@ -34,7 +34,7 @@ public class ReviewRestController {
         Review created = reviewService.addReview(quizId, payload);
 
         // Return created review with location header
-        URI location = URI.create(String.format("/api/reviews/%d", created.getId()));
+        URI location = URI.create(String.format("/api/quizzes/%d/reviews/%d", quizId, created.getId()));
         return ResponseEntity.created(location).body(created);
     }
 }
