@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import {
   getQuizById,
   getQuestionsByQuizId,
@@ -31,7 +31,6 @@ export default function QuizDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Track answers + feedback per question
   const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([]);
   const [feedback, setFeedback] = useState<Record<number, string>>({});
 
@@ -58,11 +57,9 @@ export default function QuizDetails() {
         setLoading(false);
       }
     }
-
     load();
   }, [quizId]);
 
-  // Select option
   const handleSelect = (questionId: number, optionId: number) => {
     setUserAnswers((prev) =>
       prev.map((a) =>
@@ -71,7 +68,6 @@ export default function QuizDetails() {
     );
   };
 
-  // Submit Answer (per question)
   const handleSubmitAnswer = (question: Question) => {
     const ua = userAnswers.find((a) => a.questionId === question.id);
     if (!ua || ua.selectedOptionId == null) return;
@@ -81,20 +77,14 @@ export default function QuizDetails() {
     );
     if (!selectedOpt) return;
 
-    if (selectedOpt.correct) {
-      setFeedback((prev) => ({
-        ...prev,
-        [question.id]: "That is correct, good job!",
-      }));
-    } else {
-      setFeedback((prev) => ({
-        ...prev,
-        [question.id]: "That is not correct, try again!",
-      }));
-    }
+    setFeedback((prev) => ({
+      ...prev,
+      [question.id]: selectedOpt.correct
+        ? "That is correct, good job!"
+        : "That is not correct, try again!",
+    }));
   };
 
-  // Submit entire quiz
   const handleSubmitQuiz = async () => {
     const payload: SubmitQuizRequest = {
       quizId,
@@ -106,13 +96,12 @@ export default function QuizDetails() {
 
     try {
       await submitQuizAnswers(payload);
-      navigate("/quizzes"); // Go back to quiz list
+      navigate("/quizzes");
     } catch (err: any) {
       alert("Failed to submit quiz.");
     }
   };
 
-  // ---- UI ----
   if (loading) return <p>Loading quiz...</p>;
   if (error) return <p>{error}</p>;
   if (!quiz) return <p>Quiz not found.</p>;
@@ -137,8 +126,7 @@ export default function QuizDetails() {
           <div key={question.id} className="question-card">
             <p className="question-text">{question.text}</p>
             <p className="question-meta">
-              Question {idx + 1} of {questions.length} · Difficulty:{" "}
-              {question.difficulty}
+              Question {idx + 1} of {questions.length} · Difficulty: {question.difficulty}
             </p>
 
             <div className="answer-options">
@@ -166,9 +154,7 @@ export default function QuizDetails() {
               <p
                 style={{
                   marginTop: "8px",
-                  color: feedback[question.id].includes("correct")
-                    ? "green"
-                    : "red",
+                  color: feedback[question.id].includes("correct") ? "green" : "red",
                 }}
               >
                 {feedback[question.id]}
@@ -178,10 +164,17 @@ export default function QuizDetails() {
         );
       })}
 
-      <div className="submit-section">
+      <div style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
         <button className="submit-button" onClick={handleSubmitQuiz}>
           Submit Quiz
         </button>
+        <Link
+          to={`/quizzes/${quiz.id}/review`}
+          className="submit-button"
+          style={{ textDecoration: "none", textAlign: "center" }}
+        >
+          Add Review
+        </Link>
       </div>
     </div>
   );

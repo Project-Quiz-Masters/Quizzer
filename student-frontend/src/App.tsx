@@ -22,8 +22,6 @@ function App() {
             <Link to="/categories" className="nav-link">
               CATEGORIES
             </Link>
-            <Link to={`/quizzes//review`}>Add a review</Link>
-
           </nav>
         </div>
       </header>
