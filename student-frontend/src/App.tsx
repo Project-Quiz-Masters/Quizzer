@@ -4,6 +4,7 @@ import QuizDetails from "./pages/QuizDetails.tsx";
 import CategoriesList from "./pages/CategoriesList";
 import CategoryQuizzes from "./pages/CategoryQuizzes";
 import QuizResults from "./pages/QuizResults";
+import QuizReviewPage from "./pages/QuizReviewPage";
 
 import "./App.css";
 
@@ -21,6 +22,8 @@ function App() {
             <Link to="/categories" className="nav-link">
               CATEGORIES
             </Link>
+            <Link to={`/quizzes//review`}>Add a review</Link>
+
           </nav>
         </div>
       </header>
@@ -33,6 +36,7 @@ function App() {
           <Route path="/quizzes/:id/results" element={<QuizResults />} />
           <Route path="/categories" element={<CategoriesList />} />
           <Route path="/categories/:categoryId/quizzes" element={<CategoryQuizzes />} />
+          <Route path="/quizzes/:id/review" element={<QuizReviewPage />} />
         </Routes>
       </main>
     </div>
