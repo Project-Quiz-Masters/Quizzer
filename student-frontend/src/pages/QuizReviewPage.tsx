@@ -46,13 +46,18 @@ export default function QuizReviewPage() {
   if (loading) return <p>Loading…</p>;
   if (!quiz) return <p>Quiz not found.</p>;
 
+  const formattedAverage =
+    reviewsData?.averageRating != null
+      ? reviewsData.averageRating.toFixed(1)
+      : "-";
+
   return (
     <div className="review-page-container">
       <h1>Reviews of "{quiz.title}"</h1>
 
       <p>
-        {reviewsData?.averageRating ?? "-"} rating average based on{" "}
-        {reviewsData?.count ?? 0} reviews.
+        {formattedAverage} rating average based on {reviewsData?.count ?? 0}{" "}
+        reviews.
       </p>
 
       <Link to={`/quizzes/${quizId}/reviews/add`} className="quiz-link">

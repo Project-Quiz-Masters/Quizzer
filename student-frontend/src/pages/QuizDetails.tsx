@@ -12,8 +12,7 @@ import {
 function formatDate(dateStr: string): string {
   if (!dateStr) return "";
   const d = new Date(dateStr);
-  if (Number.isNaN(d.getTime())) return dateStr;
-  return d.toLocaleDateString("fi-FI");
+  return Number.isNaN(d.getTime()) ? dateStr : d.toLocaleDateString("fi-FI");
 }
 
 interface UserAnswer {
@@ -30,7 +29,6 @@ export default function QuizDetails() {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
   const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([]);
   const [feedback, setFeedback] = useState<Record<number, string>>({});
 
@@ -51,12 +49,14 @@ export default function QuizDetails() {
             selectedOptionId: null,
           }))
         );
-      } catch (err: any) {
-        setError(err.message || "Failed to load quiz");
+      } catch (err) {
+        if (err instanceof Error) setError(err.message);
+        else setError("Failed to load quiz");
       } finally {
         setLoading(false);
       }
     }
+
     load();
   }, [quizId]);
 
@@ -97,7 +97,7 @@ export default function QuizDetails() {
     try {
       await submitQuizAnswers(payload);
       navigate("/quizzes");
-    } catch (err: any) {
+    } catch {
       alert("Failed to submit quiz.");
     }
   };
@@ -114,9 +114,10 @@ export default function QuizDetails() {
 
       <h1 className="page-title">{quiz.title}</h1>
       <p className="quiz-description">{quiz.description}</p>
+
       <p className="quiz-meta">
         Added on: {formatDate(quiz.createdAt)} · Questions: {questions.length} ·
-        Course: {quiz.course} · Category: {(quiz as any).categoryName || "-"}
+        Course: {quiz.course} · Category: {quiz.categoryName ?? "-"}
       </p>
 
       {questions.map((question, idx) => {
@@ -171,10 +172,11 @@ export default function QuizDetails() {
         <button className="submit-button" onClick={handleSubmitQuiz}>
           Submit Quiz
         </button>
+
         <Link
           to={`/quizzes/${quiz.id}/reviews/add`}
           className="submit-button"
-          style={{ textDecoration: "none", textAlign: "center" }}
+          style={{ textDecoration: "none" }}
         >
           Add Review
         </Link>
