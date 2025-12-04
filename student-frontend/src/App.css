@@ -536,6 +536,23 @@
   background-color: #4338ca;
 }
 
+.review-cancel-button {
+  background-color: #e0e0e0;
+  color: #333;
+  border: none;
+  padding: 8px 18px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+}
+
+.review-cancel-button:hover {
+  background-color: #d5d5d5;
+  color: #000;
+}
+
 .error-text {
   color: #dc2626;
 }
@@ -561,6 +578,33 @@
   padding: 15px;
   margin-bottom: 15px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.review-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+}
+
+.review-edit-button {
+  background-color: #ffc107;
+  color: #000;
+  border: none;
+  padding: 8px 18px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+}
+
+.review-edit-button:hover {
+  background-color: #ffca2c !important;
+  color: #000 !important;
 }
 
 .review-header {

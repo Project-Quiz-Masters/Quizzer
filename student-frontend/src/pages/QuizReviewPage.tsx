@@ -2,6 +2,7 @@ import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getQuizById, type Quiz } from "../services/quizService";
 import { getReviewsByQuizId } from "../services/reviewService";
+import EditReviewForm from "../components/EditReviewForm";
 
 export interface Review {
   id: number;
@@ -24,6 +25,7 @@ export default function QuizReviewPage() {
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [reviewsData, setReviewsData] = useState<ReviewsResponse | null>(null);
   const [loading, setLoading] = useState(true);
+  const [editingReview, setEditingReview] = useState<Review | null>(null);
 
   useEffect(() => {
     if (!quizId) return;
@@ -63,6 +65,26 @@ export default function QuizReviewPage() {
       <Link to={`/quizzes/${quizId}/reviews/add`} className="quiz-link">
         Write your review
       </Link>
+      {/* Edit form shown when user clicks 'Edit' on a review */}
+      {editingReview && (
+        <EditReviewForm
+          review={editingReview}
+          onCancel={() => setEditingReview(null)}
+          onSaved={(updated) => {
+            setReviewsData((prev) =>
+              prev
+                ? {
+                    ...prev,
+                    reviews: prev.reviews.map((r) =>
+                      r.id === updated.id ? updated : r
+                    ),
+                  }
+                : prev
+            );
+            setEditingReview(null);
+          }}
+        />
+      )}
 
       <section className="reviews-list">
         {reviewsData?.reviews.length === 0 && <p>No reviews yet.</p>}
@@ -72,9 +94,19 @@ export default function QuizReviewPage() {
             <strong>{review.nickname}</strong>
             <p>Rating: {review.rating}/5</p>
             <p>{review.text}</p>
-            <small>
-              Written on: {new Date(review.createdAt).toLocaleDateString()}
-            </small>
+            <div className="review-footer">
+              <small className="review-date">
+                Written on: {new Date(review.createdAt).toLocaleDateString()}
+              </small>
+              {/* Button to enable edit mode */}
+              <button
+                type="button"
+                className="review-edit-button"
+                onClick={() => setEditingReview(review)}
+              >
+                Edit
+              </button>
+            </div>
           </div>
         ))}
       </section>

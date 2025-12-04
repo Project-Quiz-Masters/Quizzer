@@ -34,6 +34,38 @@ public class ReviewService {
         return reviewRepository.save(review);
     }
 
+    // Update an existing review
+    public Review updateReview(Long reviewId, Review payload) {
+        // Find existing review
+        Optional<Review> maybeReview = reviewRepository.findById(reviewId);
+
+        // If review does not exist, return null, controller turns this into 404
+        if (maybeReview.isEmpty()) {
+            return null;
+        }
+
+        // Validation
+        if (payload.getNickname() == null || payload.getNickname().trim().isEmpty()) {
+            throw new IllegalArgumentException("Nickname is required");
+        }
+
+        if (payload.getText() == null || payload.getText().trim().isEmpty()) {
+            throw new IllegalArgumentException("Review text is required");
+        }
+
+        int rating = payload.getRating();
+        if (rating < 1 || rating > 5) {
+            throw new IllegalArgumentException("Rating must be between 1 and 5");
+        }
+
+        Review review = maybeReview.get();
+        review.setNickname(payload.getNickname());
+        review.setRating(rating);
+        review.setText(payload.getText());
+
+        return reviewRepository.save(review);
+    }
+
     public List<Review> getReviewsForQuizNewestFirst(Long quizId) {
         return reviewRepository.findByQuizId(quizId, Sort.by(Sort.Direction.DESC, "createdAt"));
     }

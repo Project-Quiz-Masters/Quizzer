@@ -22,7 +22,7 @@ public class ReviewRestController {
         this.reviewService = reviewService;
     }
 
-        @PostMapping("/quizzes/{quizId}/reviews")
+    @PostMapping("/quizzes/{quizId}/reviews")
     @Operation(summary = "Add a review", description = "Adds a new review to the specified quiz.")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Review created successfully"),
@@ -56,6 +56,33 @@ public class ReviewRestController {
         return ResponseEntity.ok(payload);
     }
 
+    // PUT /reviews/{reviewId}
+    // Allows editing an existing review.
+    // we return 404 if the specific review ID does not exist.
+    // Invalid request body results in 400 Bad Request.
+
+    @PutMapping("/reviews/{reviewId}")
+    @Operation(summary = "Update a review", description = "Updates the review with the specified id.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Review updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid review data"),
+            @ApiResponse(responseCode = "404", description = "Review not found")
+    })
+    public ResponseEntity<Review> updateReview(
+            @PathVariable Long reviewId,
+            @RequestBody Review payload) {
+
+        try {
+            Review updated = reviewService.updateReview(reviewId, payload);
+            if (updated == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(updated);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     public static class ReviewsResponse {
         private final java.util.List<Review> reviews;
         private final Double averageRating;
@@ -67,8 +94,16 @@ public class ReviewRestController {
             this.count = count;
         }
 
-        public java.util.List<Review> getReviews() { return reviews; }
-        public Double getAverageRating() { return averageRating; }
-        public Integer getCount() { return count; }
+        public java.util.List<Review> getReviews() {
+            return reviews;
+        }
+
+        public Double getAverageRating() {
+            return averageRating;
+        }
+
+        public Integer getCount() {
+            return count;
+        }
     }
 }
