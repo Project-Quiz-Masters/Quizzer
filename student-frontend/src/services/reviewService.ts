@@ -26,3 +26,14 @@ export async function createReview(
 
   return response.json();
 }
+export async function getReviewsByQuizId(quizId: number) {
+  const response = await fetch(
+    `${import.meta.env.VITE_BACKEND_URL}/api/quizzes/${quizId}/reviews`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch reviews");
+  }
+
+  return response.json();
+}

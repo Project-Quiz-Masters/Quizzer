@@ -126,7 +126,8 @@ export default function QuizDetails() {
           <div key={question.id} className="question-card">
             <p className="question-text">{question.text}</p>
             <p className="question-meta">
-              Question {idx + 1} of {questions.length} · Difficulty: {question.difficulty}
+              Question {idx + 1} of {questions.length} · Difficulty:{" "}
+              {question.difficulty}
             </p>
 
             <div className="answer-options">
@@ -154,7 +155,9 @@ export default function QuizDetails() {
               <p
                 style={{
                   marginTop: "8px",
-                  color: feedback[question.id].includes("correct") ? "green" : "red",
+                  color: feedback[question.id].includes("correct")
+                    ? "green"
+                    : "red",
                 }}
               >
                 {feedback[question.id]}
@@ -169,7 +172,7 @@ export default function QuizDetails() {
           Submit Quiz
         </button>
         <Link
-          to={`/quizzes/${quiz.id}/review`}
+          to={`/quizzes/${quiz.id}/reviews/add`}
           className="submit-button"
           style={{ textDecoration: "none", textAlign: "center" }}
         >

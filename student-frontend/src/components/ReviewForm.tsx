@@ -2,9 +2,10 @@ import "../App.css";
 import { useState } from "react";
 import { createReview } from "../services/reviewService";
 
-interface ReviewFormProps {
+export interface ReviewFormProps {
   quizId: number;
   isPublished: boolean;
+  onReviewAdded?: () => void;
 }
 
 export default function ReviewForm({ quizId }: ReviewFormProps) {
@@ -30,18 +31,18 @@ export default function ReviewForm({ quizId }: ReviewFormProps) {
       setNickname("");
       setRating(null);
       setText("");
-    } catch (err: any) {
-      setError(err.message || "Failed to submit review");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Failed to submit review");
+      }
     }
-
   }
 
   return (
-
-
     <div className="page-container review-page">
       <div className="card review-form-card">
-
         {error && <p className="error-text">{error}</p>}
         {success && <p className="success-text">{success}</p>}
 
@@ -75,7 +76,9 @@ export default function ReviewForm({ quizId }: ReviewFormProps) {
                     checked={rating === item.value}
                     onChange={() => setRating(item.value)}
                   />
-                  <span>{item.value} - {item.label}</span>
+                  <span>
+                    {item.value} - {item.label}
+                  </span>
                 </label>
               ))}
             </div>
@@ -98,6 +101,5 @@ export default function ReviewForm({ quizId }: ReviewFormProps) {
         </form>
       </div>
     </div>
-
   );
 }

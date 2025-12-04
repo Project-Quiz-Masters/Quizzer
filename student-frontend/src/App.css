@@ -51,7 +51,7 @@
 
 .page-container {
   background: transparent;
-  color: black
+  color: black;
 }
 
 .page-title {
@@ -168,7 +168,6 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-
 .question-header {
   display: flex;
   justify-content: space-between;
@@ -178,16 +177,13 @@
   color: #000;
 }
 
-
 .question-number {
   font-weight: 500;
 }
 
-
 .question-difficulty {
   color: #1976d2;
 }
-
 
 .question-text {
   font-size: 1.25rem;
@@ -306,7 +302,6 @@
 .back-button:hover {
   background-color: #616161;
 }
-
 
 @media (max-width: 768px) {
   .app-content {
@@ -547,6 +542,40 @@
 
 .success-text {
   color: #16a34a;
+}
+.review-page-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.summary-section,
+.add-review-section,
+.reviews-list {
+  margin-bottom: 30px;
+}
+
+.review-card {
+  background: white;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.review-text {
+  margin-bottom: 8px;
+}
+
+.review-date {
+  color: gray;
+  font-size: 0.9rem;
 }
 
 /* Responsive adjustments */
