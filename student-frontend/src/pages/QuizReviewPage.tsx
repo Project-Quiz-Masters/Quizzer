@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getQuizById, type Quiz } from "../services/quizService";
-import { getReviewsByQuizId } from "../services/reviewService";
+import { getReviewsByQuizId, deleteReview } from "../services/reviewService";
 import EditReviewForm from "../components/EditReviewForm";
 
 export interface Review {
@@ -26,6 +26,8 @@ export default function QuizReviewPage() {
   const [reviewsData, setReviewsData] = useState<ReviewsResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [editingReview, setEditingReview] = useState<Review | null>(null);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!quizId) return;
@@ -47,6 +49,28 @@ export default function QuizReviewPage() {
 
   if (loading) return <p>Loading…</p>;
   if (!quiz) return <p>Quiz not found.</p>;
+  async function handleDelete(reviewId: number) {
+    setError(null);
+    const confirm = window.confirm("Delete this review permanently?");
+    if (!confirm) return;
+    try {
+      setDeletingId(reviewId);
+      await deleteReview(reviewId);
+      setReviewsData((prev) =>
+        prev
+          ? {
+              ...prev,
+              count: Math.max(0, (prev.count ?? 0) - 1),
+              reviews: prev.reviews.filter((r) => r.id !== reviewId),
+            }
+          : prev
+      );
+    } catch (e: any) {
+      setError(e?.message || "Failed to delete review");
+    } finally {
+      setDeletingId(null);
+    }
+  }
 
   const formattedAverage =
     reviewsData?.averageRating != null
@@ -69,6 +93,7 @@ export default function QuizReviewPage() {
       {editingReview && (
         <EditReviewForm
           review={editingReview}
+          quizId={quizId}
           onCancel={() => setEditingReview(null)}
           onSaved={(updated) => {
             setReviewsData((prev) =>
@@ -87,6 +112,7 @@ export default function QuizReviewPage() {
       )}
 
       <section className="reviews-list">
+        {error && <p className="error-text">{error}</p>}
         {reviewsData?.reviews.length === 0 && <p>No reviews yet.</p>}
 
         {reviewsData?.reviews.map((review) => (
@@ -98,14 +124,24 @@ export default function QuizReviewPage() {
               <small className="review-date">
                 Written on: {new Date(review.createdAt).toLocaleDateString()}
               </small>
-              {/* Button to enable edit mode */}
-              <button
-                type="button"
-                className="review-edit-button"
-                onClick={() => setEditingReview(review)}
-              >
-                Edit
-              </button>
+              <div className="actions">
+                {/* Button to enable edit mode */}
+                <button
+                  type="button"
+                  className="review-edit-button"
+                  onClick={() => setEditingReview(review)}
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  className="review-delete-button"
+                  onClick={() => handleDelete(review.id)}
+                  disabled={deletingId === review.id}
+                >
+                  {deletingId === review.id ? "Deleting…" : "Delete"}
+                </button>
+              </div>
             </div>
           </div>
         ))}

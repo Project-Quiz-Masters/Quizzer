@@ -1,5 +1,6 @@
 import "../App.css";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   updateReview,
   type UpdateReviewRequest,
@@ -10,12 +11,14 @@ export interface EditReviewFormProps {
   review: Review;
   onSaved: (updated: Review) => void;
   onCancel: () => void;
+  quizId?: number;
 }
 
 export default function EditReviewForm({
   review,
   onSaved,
   onCancel,
+  quizId,
 }: EditReviewFormProps) {
   const [nickname, setNickname] = useState(review.nickname);
   const [rating, setRating] = useState<number | null>(review.rating);
@@ -61,6 +64,11 @@ export default function EditReviewForm({
   return (
     <div className="page-container review-page">
       <div className="card review-form-card">
+        {quizId != null && (
+          <Link to={`/quizzes/${quizId}/reviews`} className="back-button">
+            Back to reviews
+          </Link>
+        )}
         {error && <p className="error-text">{error}</p>}
         {success && <p className="success-text">{success}</p>}
 

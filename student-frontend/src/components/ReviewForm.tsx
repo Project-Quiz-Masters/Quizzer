@@ -1,5 +1,6 @@
 import "../App.css";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { createReview } from "../services/reviewService";
 
 export interface ReviewFormProps {
@@ -43,6 +44,7 @@ export default function ReviewForm({ quizId }: ReviewFormProps) {
   return (
     <div className="page-container review-page">
       <div className="card review-form-card">
+        <Link to={`/quizzes/${quizId}/reviews`} className="back-button">Back to reviews</Link>
         {error && <p className="error-text">{error}</p>}
         {success && <p className="success-text">{success}</p>}
 
@@ -98,6 +100,7 @@ export default function ReviewForm({ quizId }: ReviewFormProps) {
           <button type="submit" className="submit-button">
             Submit Review
           </button>
+          {/* Back link shown only at the top; remove duplicate */}
         </form>
       </div>
     </div>
