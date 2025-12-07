@@ -245,3 +245,10 @@ https://rahti-quizzer-quizzer-postgres.2.rahtiapp.fi/quizzes
 
 **Flinga Board:**  
 https://edu.flinga.fi/s/EXCBP45
+
+# License
+
+Licensed under the GNU GPL v3.0 – see the **[LICENSE](https://github.com/Project-Quiz-Masters/Quizzer/blob/main/LICENSE)** file.
+
+
+
