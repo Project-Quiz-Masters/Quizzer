@@ -43,6 +43,23 @@ https://github.com/orgs/Project-Quiz-Masters/projects/5/views/1
 
 Below are the implementation technologies and setup instructions for local development.
 
+### Running Tests from the Command Line
+
+The backend integration tests can be run using the Maven Wrapper.
+
+On Windows (PowerShell or Command Prompt):
+./mvnw.cmd test
+
+On macOS / Linux:
+./mvnw test
+
+All tests use a separate in-memory H2 test database configured in:
+
+src/test/resources/application.properties
+
+This ensures that running tests does not affect the development or production database.
+
+
 ### Backend
 
 #### Technologies
