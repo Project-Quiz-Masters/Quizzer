@@ -48,14 +48,20 @@ Below are the implementation technologies and setup instructions for local devel
 The backend integration tests can be run using the Maven Wrapper.
 
 On Windows (PowerShell or Command Prompt):
+```
 ./mvnw.cmd test
+```
 
 On macOS / Linux:
+```
 ./mvnw test
+```
 
 All tests use a separate in-memory H2 test database configured in:
 
+```
 src/test/resources/application.properties
+```
 
 This ensures that running tests does not affect the development or production database.
 
