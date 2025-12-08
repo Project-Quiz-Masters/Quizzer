@@ -10,7 +10,6 @@ export interface Quiz {
     id: number;
     name: string;
   };
-  // Category name provided by DTO endpoints
   categoryName?: string;
 }
 
@@ -38,26 +37,25 @@ function handleJsonResponse<T>(response: Response): Promise<T> {
   return response.json();
 }
 
-// 👉 Get all published quizzes
+//  Get all published quizzes
 export async function getAllPublishedQuizzes(): Promise<Quiz[]> {
   const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/quizzes`);
   return handleJsonResponse<Quiz[]>(res);
-  // If you have /api/quizzes/published, use that instead:
-  // const res = await fetch(`${BACKEND_URL}/api/quizzes/published`);
+
 }
 
-// 👉 Get single quiz by id
+// Get single quiz by id
 export async function getQuizById(id: number): Promise<Quiz> {
   const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/quizzes/${id}`);
   return handleJsonResponse<Quiz>(res);
 }
 
-// 👉 Get questions of a quiz
+// Get questions of a quiz
 export async function getQuestionsByQuizId(id: number): Promise<Question[]> {
   const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/quizzes/${id}/questions`);
   return handleJsonResponse<Question[]>(res);
 }
-// 👉 Submit quiz answers
+// Submit quiz answers
 export interface SubmitQuizAnswer {
   questionId: number;
   answerOptionId: number | null;
@@ -72,7 +70,7 @@ export interface SubmitQuizResponse {
   quizId: number;
   correctCount: number;
   totalQuestions: number;
-  // you can add more fields if backend sends them
+  scorePercentage: number;
 }
 
 export async function submitQuizAnswers(

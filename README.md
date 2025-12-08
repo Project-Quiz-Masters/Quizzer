@@ -75,6 +75,49 @@ This ensures that running tests does not affect the development or production da
 - Major libraries: Spring Web, Spring Data JPA, SpringDoc/OpenAPI (Swagger), H2  
 - Databases: H2 (development), PostgreSQL (production)
 
+**RAHTI Production URL**: https://rahti-quizzer-quizzer-postgres.2.rahtiapp.fi/quizzes  
+**Swagger (Production)**: link to the Swagger documentation deployed to the production environment in Rahti
+
+#### ER Diagram
+
+```mermaid
+erDiagram
+    CATEGORY {
+        int ID
+        string Title
+        string Description
+    }
+
+    QUIZ {
+        int ID
+        string Title
+        string Description
+        boolean Published
+        string CreatedAt
+    }
+
+    QUESTION {
+        int ID
+        string Text
+        string Difficulty
+    }
+
+    ANSWEROPTION {
+        int ID
+        string Text
+        boolean Correct
+    }
+
+    STUDENTANSWER {
+        int ID
+    }
+
+    CATEGORY ||--o{ QUIZ : contains
+    QUIZ ||--o{ QUESTION : includes
+    QUESTION ||--o{ ANSWEROPTION : offers
+    ANSWEROPTION ||--o{ STUDENTANSWER : chosenBy
+```
+
 #### Running the Backend
 
 1. Clone the repository:
@@ -82,9 +125,6 @@ This ensures that running tests does not affect the development or production da
    ```
    git clone https://github.com/Project-Quiz-Masters/Quizzer.git
    ```
-
-**RAHTI Production URL**: https://rahti-quizzer-quizzer-postgres.2.rahtiapp.fi/quizzes
-**Swagger (Production)**: Available in the RAHTI environment (link provided by ops)
 
 2. Navigate to the project and pull the latest code:
 

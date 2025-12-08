@@ -86,31 +86,31 @@ public class StudentAnswerService {
     @Transactional
     public QuizSubmissionResultDTO submitQuiz(QuizSubmissionDTO dto) {
 
-    int correctCount = 0;
+        int correctCount = 0;
 
-    for (QuizSubmissionDTO.AnswerSubmission a : dto.getAnswers()) {
+        for (QuizSubmissionDTO.AnswerSubmission a : dto.getAnswers()) {
 
-        AnswerOption option = answerOptionRepository.findById(a.getAnswerOptionId())
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Answer option not found"));
+            AnswerOption option = answerOptionRepository.findById(a.getAnswerOptionId())
+                    .orElseThrow(() -> new ResponseStatusException(
+                            HttpStatus.NOT_FOUND, "Answer option not found"));
 
-        // Save the student answer (anonymous)
-        StudentAnswer sa = new StudentAnswer();
-        sa.setAnswer(option);
-        studentAnswerRepository.save(sa);
+            // Save the student answer
+            StudentAnswer sa = new StudentAnswer();
+            sa.setAnswer(option);
+            studentAnswerRepository.save(sa);
 
-        // Count correct answers
-        if (option.isCorrect()) {
-            correctCount++;
+            // Count correct answers
+            if (option.isCorrect()) {
+                correctCount++;
+            }
         }
+
+        QuizSubmissionResultDTO result = new QuizSubmissionResultDTO();
+        result.setQuizId(dto.getQuizId());
+        result.setCorrectCount(correctCount);
+        result.setTotalQuestions(dto.getAnswers().size());
+
+        return result;
     }
-
-    QuizSubmissionResultDTO result = new QuizSubmissionResultDTO();
-    result.setQuizId(dto.getQuizId());
-    result.setCorrectCount(correctCount);
-    result.setTotalQuestions(dto.getAnswers().size());
-
-    return result;
-}
 
 }

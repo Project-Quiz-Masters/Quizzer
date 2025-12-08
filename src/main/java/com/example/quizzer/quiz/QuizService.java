@@ -15,6 +15,9 @@ public class QuizService {
     @Autowired
     private com.example.quizzer.category.CategoryService categoryService;
     
+    @Autowired
+    private com.example.quizzer.studentanswer.StudentAnswerRepository studentAnswerRepository;
+    
     /**
      * Create a new quiz (simple version)
      */
@@ -179,6 +182,13 @@ public class QuizService {
         if (!quizRepository.existsById(quizId)) {
             throw new IllegalArgumentException("Quiz with ID " + quizId + " not found");
         }
+        
+        // Check if students have taken this quiz
+        long studentAnswerCount = studentAnswerRepository.countByQuizId(quizId);
+        if (studentAnswerCount > 0) {
+            throw new IllegalStateException("Cannot delete quiz: students have already taken this quiz");
+        }
+        
         quizRepository.deleteById(quizId);
     }
 

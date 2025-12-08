@@ -13,4 +13,7 @@ public interface StudentAnswerRepository extends JpaRepository<StudentAnswer, Lo
     
     @Query("SELECT COUNT(sa) FROM StudentAnswer sa WHERE sa.answer.question.id = :questionId AND sa.answer.correct = true")
     long countByAnswerQuestionIdAndAnswerIsCorrectTrue(@Param("questionId") Long questionId);
+    
+    @Query("SELECT COUNT(sa) FROM StudentAnswer sa WHERE sa.answer.question.quiz.id = :quizId")
+    long countByQuizId(@Param("quizId") Long quizId);
 }

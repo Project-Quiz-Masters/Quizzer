@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import {
   getQuizById,
   getQuestionsByQuizId,
@@ -12,14 +12,12 @@ import {
 function formatDate(dateStr: string): string {
   if (!dateStr) return "";
   const d = new Date(dateStr);
-  if (Number.isNaN(d.getTime())) return dateStr;
-  return d.toLocaleDateString("fi-FI");
+  return Number.isNaN(d.getTime()) ? dateStr : d.toLocaleDateString("fi-FI");
 }
 
 interface UserAnswer {
   questionId: number;
   selectedOptionId: number | null;
-  isCorrect: boolean | null;
 }
 
 export default function QuizDetails() {
@@ -32,23 +30,11 @@ export default function QuizDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([]);
-  const [submitted, setSubmitted] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [feedback, setFeedback] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState<Record<number, string>>({});
 
-  // Load quiz + questions
   useEffect(() => {
-    if (!quizId) {
-      setError("Invalid quiz id");
-      setLoading(false);
-      return;
-    }
-
-    async function loadData() {
+    async function load() {
       try {
-        setLoading(true);
-        setError(null);
-
         const [quizData, questionData] = await Promise.all([
           getQuizById(quizId),
           getQuestionsByQuizId(quizId),
@@ -57,58 +43,49 @@ export default function QuizDetails() {
         setQuiz(quizData);
         setQuestions(questionData);
 
-        // Initialize answers
         setUserAnswers(
           questionData.map((q) => ({
             questionId: q.id,
             selectedOptionId: null,
-            isCorrect: null,
           }))
         );
-      } catch (err: any) {
-        setError(err.message || "Failed to load quiz details");
+      } catch (err) {
+        if (err instanceof Error) setError(err.message);
+        else setError("Failed to load quiz");
       } finally {
         setLoading(false);
       }
     }
 
-    loadData();
+    load();
   }, [quizId]);
 
-  // Select answer
-  const handleAnswerSelect = (
-    questionId: number,
-    optionId: number,
-    isCorrect: boolean
-  ) => {
-    if (submitted) return;
-
+  const handleSelect = (questionId: number, optionId: number) => {
     setUserAnswers((prev) =>
-      prev.map((ua) =>
-        ua.questionId === questionId
-          ? { ...ua, selectedOptionId: optionId, isCorrect }
-          : ua
+      prev.map((a) =>
+        a.questionId === questionId ? { ...a, selectedOptionId: optionId } : a
       )
     );
   };
 
-  // Submit quiz
+  const handleSubmitAnswer = (question: Question) => {
+    const ua = userAnswers.find((a) => a.questionId === question.id);
+    if (!ua || ua.selectedOptionId == null) return;
+
+    const selectedOpt = question.answerOptions.find(
+      (o) => o.id === ua.selectedOptionId
+    );
+    if (!selectedOpt) return;
+
+    setFeedback((prev) => ({
+      ...prev,
+      [question.id]: selectedOpt.correct
+        ? "That is correct, good job!"
+        : "That is not correct, try again!",
+    }));
+  };
+
   const handleSubmitQuiz = async () => {
-    // Ensure all answered
-    const unanswered = userAnswers.filter((a) => a.selectedOptionId === null);
-    if (unanswered.length > 0) {
-      alert("Please answer all questions before submitting.");
-      return;
-    }
-
-    const totalQuestions = questions.length;
-    const correctCount = userAnswers.filter((a) => a.isCorrect === true).length;
-    const percentage = totalQuestions
-      ? (correctCount / totalQuestions) * 100
-      : 0;
-
-    setSubmitting(true);
-
     const payload: SubmitQuizRequest = {
       quizId,
       answers: userAnswers.map((a) => ({
@@ -119,169 +96,91 @@ export default function QuizDetails() {
 
     try {
       await submitQuizAnswers(payload);
-      setFeedback(
-        `Quiz submitted! You scored ${correctCount} out of ${totalQuestions} (${percentage.toFixed(
-          1
-        )}%).`
-      );
-    } catch (err: any) {
-      setFeedback(
-        `Quiz submitted locally! You scored ${correctCount} out of ${totalQuestions} (${percentage.toFixed(
-          1
-        )}%). Saving to server failed: ${err.message || "Unknown error"}`
-      );
-    } finally {
-      setSubmitted(true);
-      setSubmitting(false);
+      navigate("/quizzes");
+    } catch {
+      alert("Failed to submit quiz.");
     }
   };
 
-  // Loading UI
-  if (loading) {
-    return (
-      <div className="page-container">
-        <p>Loading quiz...</p>
-      </div>
-    );
-  }
-
-  // Error UI
-  if (error) {
-    return (
-      <div className="page-container">
-        <p className="error-text">{error}</p>
-
-        <button className="back-button" onClick={() => navigate(-1)}>
-          ← Back to Quizzes
-        </button>
-      </div>
-    );
-  }
-
-  if (!quiz) {
-    return (
-      <div className="page-container">
-        <p>Quiz not found.</p>
-
-        <button className="back-button" onClick={() => navigate(-1)}>
-          ← Back to Quizzes
-        </button>
-      </div>
-    );
-  }
-
-  const questionCount = questions.length;
+  if (loading) return <p>Loading quiz...</p>;
+  if (error) return <p>{error}</p>;
+  if (!quiz) return <p>Quiz not found.</p>;
 
   return (
     <div className="page-container">
-      {/* Back button */}
-      {!submitted && (
-        <button className="back-button" onClick={() => navigate(-1)}>
-          ← Back to Quizzes
-        </button>
-      )}
+      <button className="back-button" onClick={() => navigate(-1)}>
+        ← Back to Quizzes
+      </button>
 
       <h1 className="page-title">{quiz.title}</h1>
       <p className="quiz-description">{quiz.description}</p>
+
       <p className="quiz-meta">
-        Added on: {formatDate(quiz.createdAt)} · Questions: {questionCount} ·
-        Course: {quiz.course} · Category: {(quiz as any).categoryName || "-"}
+        Added on: {formatDate(quiz.createdAt)} · Questions: {questions.length} ·
+        Course: {quiz.course} · Category: {quiz.categoryName ?? "-"}
       </p>
 
-      {feedback && (
-        <div className={`feedback ${submitted ? "success" : "error"}`}>
-          <p>{feedback}</p>
-        </div>
-      )}
+      {questions.map((question, idx) => {
+        const ua = userAnswers.find((a) => a.questionId === question.id);
 
-      {/* Question list */}
-      <div className="questions-list">
-        {questions.map((question, index) => {
-          const ua = userAnswers.find((a) => a.questionId === question.id);
+        return (
+          <div key={question.id} className="question-card">
+            <p className="question-text">{question.text}</p>
+            <p className="question-meta">
+              Question {idx + 1} of {questions.length} · Difficulty:{" "}
+              {question.difficulty}
+            </p>
 
-          return (
-            <div key={question.id} className="question-card">
-              <p className="question-text">{question.text}</p>
-              <p className="question-meta">
-                Question {index + 1} of {questionCount} · Difficulty:{" "}
-                {question.difficulty}
-              </p>
-
-              {submitted && (
-                <p
-                  className={`question-result ${ua?.isCorrect ? "correct" : "incorrect"
-                    }`}
-                >
-                  {ua?.isCorrect ? "Correct" : "Wrong"}
-                </p>
-              )}
-
-              {/* Answer options */}
-              {question.answerOptions?.length > 0 && (
-                <div className="answer-options">
-                  {question.answerOptions.map((option) => {
-                    const isSelected = ua?.selectedOptionId === option.id;
-
-                    return (
-                      <div
-                        key={option.id}
-                        className={`answer-option ${isSelected ? "selected" : ""
-                          } ${submitted && isSelected && ua?.isCorrect
-                            ? "correct"
-                            : ""
-                          } ${submitted && isSelected && !ua?.isCorrect
-                            ? "incorrect"
-                            : ""
-                          } ${submitted && option.correct && !isSelected
-                            ? "correct-answer"
-                            : ""
-                          }`}
-                      >
-                        <input
-                          type="radio"
-                          name={`q-${question.id}`}
-                          checked={isSelected}
-                          onChange={() =>
-                            handleAnswerSelect(
-                              question.id,
-                              option.id,
-                              option.correct
-                            )
-                          }
-                          disabled={submitted}
-                        />
-                        <label>{option.text}</label>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
+            <div className="answer-options">
+              {question.answerOptions.map((opt) => (
+                <label key={opt.id} className="answer-option">
+                  <input
+                    type="radio"
+                    name={`q-${question.id}`}
+                    checked={ua?.selectedOptionId === opt.id}
+                    onChange={() => handleSelect(question.id, opt.id)}
+                  />
+                  {opt.text}
+                </label>
+              ))}
             </div>
-          );
-        })}
+
+            <button
+              className="submit-button"
+              onClick={() => handleSubmitAnswer(question)}
+            >
+              Submit Answer
+            </button>
+
+            {feedback[question.id] && (
+              <p
+                style={{
+                  marginTop: "8px",
+                  color: feedback[question.id].includes("correct")
+                    ? "green"
+                    : "red",
+                }}
+              >
+                {feedback[question.id]}
+              </p>
+            )}
+          </div>
+        );
+      })}
+
+      <div style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
+        <button className="submit-button" onClick={handleSubmitQuiz}>
+          Submit Quiz
+        </button>
+
+        <Link
+          to={`/quizzes/${quiz.id}/reviews/add`}
+          className="submit-button"
+          style={{ textDecoration: "none" }}
+        >
+          Add Review
+        </Link>
       </div>
-
-      {/* Submit */}
-      {!submitted && questions.length > 0 && (
-        <div className="submit-section">
-          <button
-            className="submit-button"
-            onClick={handleSubmitQuiz}
-            disabled={submitting}
-          >
-            {submitting ? "Submitting..." : "Submit Quiz"}
-          </button>
-        </div>
-      )}
-
-      {/* Back after submit */}
-      {submitted && (
-        <div className="submit-section">
-          <button className="back-button" onClick={() => navigate(-1)}>
-            Back to Quizzes
-          </button>
-        </div>
-      )}
     </div>
   );
 }
