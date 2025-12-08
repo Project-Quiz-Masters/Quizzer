@@ -80,3 +80,27 @@ export async function getReviewsByQuizId(quizId: number) {
 
   return response.json();
 }
+
+export async function deleteReview(reviewId: number) {
+  const response = await fetch(
+    `${import.meta.env.VITE_BACKEND_URL}/api/reviews/${reviewId}`,
+    {
+      method: "DELETE",
+    }
+  );
+
+  if (!response.ok) {
+    let errorMessage = "Failed to delete review";
+    try {
+      const errorBody = await response.json();
+      if (errorBody?.message) {
+        errorMessage = errorBody.message;
+      }
+    } catch {
+      // Ignore JSON parsing errors
+    }
+    throw new Error(errorMessage);
+  }
+
+  return response.ok;
+}
