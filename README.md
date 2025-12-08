@@ -94,6 +94,10 @@ erDiagram
         string Description
         boolean Published
         string CreatedAt
+        int Teacher
+    }
+    TEACHER {
+         int ID
     }
 
     QUESTION {
@@ -111,11 +115,19 @@ erDiagram
     STUDENTANSWER {
         int ID
     }
-
+    REVIEW {
+         int ID
+         string Nickname
+         int Rating
+         string Text
+         string CreatedAt
+}
     CATEGORY ||--o{ QUIZ : contains
     QUIZ ||--o{ QUESTION : includes
+    TEACHER ||--o{ QUIZ : creates
     QUESTION ||--o{ ANSWEROPTION : offers
     ANSWEROPTION ||--o{ STUDENTANSWER : chosenBy
+    REVIEW ||--o{ QUIZ : about
 ```
 
 #### Running the Backend
