@@ -83,6 +83,20 @@ public class ReviewRestController {
         }
     }
 
+    @DeleteMapping("/reviews/{reviewId}")
+    @Operation(summary = "Delete a review", description = "Deletes the review with the specified id.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Review deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Review not found")
+    })
+    public ResponseEntity<Void> deleteReview(@PathVariable Long reviewId) {
+        boolean deleted = reviewService.deleteReview(reviewId);
+        if (deleted) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
     public static class ReviewsResponse {
         private final java.util.List<Review> reviews;
         private final Double averageRating;

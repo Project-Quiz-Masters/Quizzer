@@ -79,4 +79,12 @@ public class ReviewService {
     public int getReviewCount(Long quizId) {
         return reviewRepository.countByQuizId(quizId);
     }
+
+    public boolean deleteReview(Long reviewId) {
+        if (reviewRepository.existsById(reviewId)) {
+            reviewRepository.deleteById(reviewId);
+            return true;
+        }
+        return false;
+    }
 }
