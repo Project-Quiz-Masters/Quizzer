@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.quizzer.category.CategoryService;
 
@@ -125,8 +126,16 @@ public class QuizController {
 
     // USER STORY 4: Delete quiz (Thymeleaf)
     @PostMapping("/{quizId}/delete")
-    public String deleteQuiz(@PathVariable("quizId") Long quizId) {
-        quizService.deleteQuiz(quizId);
+    public String deleteQuiz(@PathVariable("quizId") Long quizId, RedirectAttributes redirectAttributes) {
+        try {
+            quizService.deleteQuiz(quizId);
+            redirectAttributes.addFlashAttribute("successMessage", "Quiz deleted successfully");
+        } catch (IllegalStateException e) {
+            // Quiz has student answers
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Error deleting quiz: " + e.getMessage());
+        }
         return "redirect:/quizzes";
     }
 
