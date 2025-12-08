@@ -1,7 +1,5 @@
 package com.example.quizzer.quiz;
 
-import com.example.quizzer.quiz.Quiz;
-import com.example.quizzer.quiz.QuizRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
