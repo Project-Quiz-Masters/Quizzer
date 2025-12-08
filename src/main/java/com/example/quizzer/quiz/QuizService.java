@@ -8,16 +8,16 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class QuizService {
-    
+
     @Autowired
     private QuizRepository quizRepository;
-    
+
     @Autowired
     private com.example.quizzer.category.CategoryService categoryService;
-    
+
     @Autowired
     private com.example.quizzer.studentanswer.StudentAnswerRepository studentAnswerRepository;
-    
+
     /**
      * Create a new quiz (simple version)
      */
@@ -26,7 +26,7 @@ public class QuizService {
         Quiz quiz = new Quiz(title, description, "Default Course", 1L); // Provide default values
         return quizRepository.save(quiz);
     }
-    
+
     /**
      * Create a new quiz with all fields
      */
@@ -57,7 +57,7 @@ public class QuizService {
     public List<Quiz> getAllQuizzes() {
         return quizRepository.findAll();
     }
-    
+
     /**
      * Get a quiz by ID
      */
@@ -70,11 +70,11 @@ public class QuizService {
      */
     public Quiz updateQuiz(Long quizId, String title, String description, String course, boolean published) {
         Optional<Quiz> existingQuiz = quizRepository.findById(quizId);
-        
+
         if (existingQuiz.isEmpty()) {
             throw new IllegalArgumentException("Quiz with ID " + quizId + " not found");
         }
-        
+
         Quiz quiz = existingQuiz.get();
         quiz.setTitle(title);
         quiz.setDescription(description);
@@ -86,13 +86,14 @@ public class QuizService {
     /**
      * Update quiz and optionally its category
      */
-    public Quiz updateQuiz(Long quizId, String title, String description, String course, boolean published, Long categoryId) {
+    public Quiz updateQuiz(Long quizId, String title, String description, String course, boolean published,
+            Long categoryId) {
         Optional<Quiz> existingQuiz = quizRepository.findById(quizId);
-        
+
         if (existingQuiz.isEmpty()) {
             throw new IllegalArgumentException("Quiz with ID " + quizId + " not found");
         }
-        
+
         Quiz quiz = existingQuiz.get();
         quiz.setTitle(title);
         quiz.setDescription(description);
@@ -111,11 +112,11 @@ public class QuizService {
      */
     public Quiz updateQuiz(Long quizId, Quiz quizDetails) {
         Optional<Quiz> existingQuiz = quizRepository.findById(quizId);
-        
+
         if (existingQuiz.isEmpty()) {
             return null;
         }
-        
+
         Quiz quiz = existingQuiz.get();
         quiz.setTitle(quizDetails.getTitle());
         quiz.setDescription(quizDetails.getDescription());
@@ -126,7 +127,8 @@ public class QuizService {
     }
 
     /**
-     * Assign a category to a quiz. Returns the updated quiz or null if quiz or category not found.
+     * Assign a category to a quiz. Returns the updated quiz or null if quiz or
+     * category not found.
      */
     public Quiz assignCategory(Long quizId, Long categoryId) {
         Optional<Quiz> existingQuiz = quizRepository.findById(quizId);
@@ -174,33 +176,16 @@ public class QuizService {
         quiz.setCategory(maybeCat.get());
         return quizRepository.save(quiz);
     }
-    
-    /**
-     * Delete a quiz
-     */
+
     public void deleteQuiz(Long quizId) {
         if (!quizRepository.existsById(quizId)) {
             throw new IllegalArgumentException("Quiz with ID " + quizId + " not found");
         }
-        
-        // Check if students have taken this quiz
         long studentAnswerCount = studentAnswerRepository.countByQuizId(quizId);
         if (studentAnswerCount > 0) {
             throw new IllegalStateException("Cannot delete quiz: students have already taken this quiz");
         }
-        
-        quizRepository.deleteById(quizId);
-    }
 
-    /**
-     * Delete quiz with teacher authorization
-     */
-    public boolean deleteQuiz(Long quizId, Long teacherId) {
-        Optional<Quiz> quiz = quizRepository.findById(quizId);
-        if (quiz.isPresent() && quiz.get().getTeacherId().equals(teacherId)) {
-            quizRepository.deleteById(quizId);
-            return true;
-        }
-        return false;
+        quizRepository.deleteById(quizId);
     }
 }
