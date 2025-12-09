@@ -12,8 +12,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Column;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "reviews")
 public class Review {
 
     @Id
