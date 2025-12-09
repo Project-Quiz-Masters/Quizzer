@@ -76,7 +76,7 @@ This ensures that running tests does not affect the development or production da
 - Databases: H2 (development), PostgreSQL (production)
 
 **RAHTI Production URL**: https://rahti-quizzer-quizzer-postgres.2.rahtiapp.fi/quizzes  
-**Swagger (Production)**: link to the Swagger documentation deployed to the production environment in Rahti
+**Swagger (Production)**: https://rahti-quizzer-quizzer-postgres.2.rahtiapp.fi/swagger-ui/index.html#/
 
 #### ER Diagram
 
