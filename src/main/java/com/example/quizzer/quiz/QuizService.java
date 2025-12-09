@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -186,6 +187,11 @@ public class QuizService {
             throw new IllegalStateException("Cannot delete quiz: students have already taken this quiz");
         }
 
-        quizRepository.deleteById(quizId);
+        try {
+            quizRepository.deleteById(quizId);
+        } catch (DataIntegrityViolationException e) {
+            // Fallback for database-level constraint violations (e.g., PostgreSQL in Rahti)
+            throw new IllegalStateException("Cannot delete quiz: it is still referenced by student answers or other records", e);
+        }
     }
 }
